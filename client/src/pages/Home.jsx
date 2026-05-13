@@ -5,11 +5,40 @@ import RoomCard from '../components/RoomCard';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
+import { X } from 'lucide-react';
 
 const Home = () => {
     const [rooms, setRooms] = useState([]);
     const [content, setContent] = useState({});
     const [loading, setLoading] = useState(true);
+    const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+    const [selectedRoom, setSelectedRoom] = useState(null);
+    const [bookingData, setBookingData] = useState({
+        guestName: '',
+        email: '',
+        phone: '',
+        checkInDate: ''
+    });
+
+    const handleBookingClick = (room) => {
+        setSelectedRoom(room);
+        setIsBookingModalOpen(true);
+    };
+
+    const handleBookingSubmit = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:5000/api/bookings', {
+                ...bookingData,
+                room: selectedRoom._id
+            });
+            alert("Booking request submitted successfully! We will contact you soon.");
+            setIsBookingModalOpen(false);
+            setBookingData({ guestName: '', email: '', phone: '', checkInDate: '' });
+        } catch (error) {
+            alert("Error submitting booking. Please try again.");
+        }
+    };
 
     useEffect(() => {
         const fetchData = async () => {
@@ -59,7 +88,7 @@ const Home = () => {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {rooms.map((room) => (
-                            <RoomCard key={room._id} room={room} />
+                            <RoomCard key={room._id} room={room} onBook={() => handleBookingClick(room)} />
                         ))}
                     </div>
                 </div>
@@ -135,6 +164,73 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Booking Modal */}
+            {isBookingModalOpen && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
+                    <motion.div 
+                        initial={{ scale: 0.9, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        className="glass-card bg-white p-10 max-w-lg w-full relative"
+                    >
+                        <button 
+                            onClick={() => setIsBookingModalOpen(false)}
+                            className="absolute top-6 right-6 text-text-muted hover:text-secondary"
+                        >
+                            <X size={24} />
+                        </button>
+                        
+                        <h3 className="text-3xl font-playfair mb-2">Book Your Stay</h3>
+                        <p className="text-text-muted mb-8">Selected Room: <span className="text-primary font-bold">{selectedRoom?.title}</span></p>
+
+                        <form onSubmit={handleBookingSubmit} className="grid gap-6">
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Full Name</label>
+                                <input 
+                                    type="text" 
+                                    className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                    required
+                                    value={bookingData.guestName}
+                                    onChange={(e) => setBookingData({...bookingData, guestName: e.target.value})}
+                                />
+                            </div>
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Email</label>
+                                    <input 
+                                        type="email" 
+                                        className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                        required
+                                        value={bookingData.email}
+                                        onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-medium mb-1">Phone</label>
+                                    <input 
+                                        type="tel" 
+                                        className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                        required
+                                        value={bookingData.phone}
+                                        onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium mb-1">Check-in Date</label>
+                                <input 
+                                    type="date" 
+                                    className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                    required
+                                    value={bookingData.checkInDate}
+                                    onChange={(e) => setBookingData({...bookingData, checkInDate: e.target.value})}
+                                />
+                            </div>
+                            <button type="submit" className="btn-primary py-4 mt-2">Submit Request</button>
+                        </form>
+                    </motion.div>
+                </div>
+            )}
 
             <Footer />
         </>

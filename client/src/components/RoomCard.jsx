@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Users, Wind, Coffee, Wifi } from 'lucide-react';
 
-const RoomCard = ({ room }) => {
+const RoomCard = ({ room, onBook }) => {
     return (
         <motion.div 
             whileHover={{ y: -10 }}
@@ -47,7 +47,12 @@ const RoomCard = ({ room }) => {
                     ))}
                 </div>
 
-                <button className="btn-primary w-full">Book Now</button>
+                <button 
+                    onClick={onBook}
+                    className="btn-primary w-full"
+                >
+                    Book Now
+                </button>
             </div>
         </motion.div>
     );
