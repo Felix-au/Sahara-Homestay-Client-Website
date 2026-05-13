@@ -25,7 +25,7 @@ const Hero = ({ content, testimonials }) => {
                         {content?.subtitle || "Experience comfortable living with modern amenities and a welcoming community at Sahara Home Stay Accommodation."}
                     </motion.p>
                 </div>
-
+                <br></br>
                 {/* Two Columns Grid */}
                 <div className="grid md:grid-cols-2 gap-12 items-stretch">
                     {/* Left Column: Image */}
