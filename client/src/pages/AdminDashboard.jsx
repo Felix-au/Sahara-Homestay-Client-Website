@@ -34,6 +34,17 @@ const AdminDashboard = () => {
     const [uploading, setUploading] = useState(false);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [credentialMsg, setCredentialMsg] = useState({ type: '', text: '' });
+    const [isRoomModalOpen, setIsRoomModalOpen] = useState(false);
+    const [editingRoom, setEditingRoom] = useState(null);
+    const [roomFormData, setRoomFormData] = useState({
+        title: '',
+        priceCooler: '',
+        priceAC: '',
+        sharingType: 'Single',
+        description: '',
+        amenities: '',
+        images: []
+    });
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -150,6 +161,55 @@ const AdminDashboard = () => {
                 alert("Error deleting message");
             }
         }
+    };
+
+    const handleSaveRoom = async (e) => {
+        e.preventDefault();
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const data = {
+                ...roomFormData,
+                amenities: roomFormData.amenities.split(',').map(a => a.trim())
+            };
+
+            if (editingRoom) {
+                await axios.put(`${API_BASE_URL}/rooms/${editingRoom._id}`, data, config);
+            } else {
+                await axios.post(`${API_BASE_URL}/rooms`, data, config);
+            }
+            setIsRoomModalOpen(false);
+            fetchData();
+        } catch (error) {
+            alert("Error saving room");
+        }
+    };
+
+    const openAddRoomModal = () => {
+        setEditingRoom(null);
+        setRoomFormData({
+            title: '',
+            priceCooler: '',
+            priceAC: '',
+            sharingType: 'Single',
+            description: '',
+            amenities: '',
+            images: []
+        });
+        setIsRoomModalOpen(true);
+    };
+
+    const openEditRoomModal = (room) => {
+        setEditingRoom(room);
+        setRoomFormData({
+            title: room.title,
+            priceCooler: room.priceCooler,
+            priceAC: room.priceAC,
+            sharingType: room.sharingType,
+            description: room.description || '',
+            amenities: room.amenities.join(', '),
+            images: room.images
+        });
+        setIsRoomModalOpen(true);
     };
 
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
@@ -377,7 +437,10 @@ const AdminDashboard = () => {
                             )}
                         </div>
 
-                        <button className="btn-primary flex items-center gap-2 self-start mb-4">
+                        <button 
+                            onClick={openAddRoomModal}
+                            className="btn-primary flex items-center gap-2 self-start mb-4"
+                        >
                             <Plus size={20} /> Add New Room
                         </button>
                         
@@ -395,12 +458,16 @@ const AdminDashboard = () => {
                                         </label>
                                     </div>
                                     <h4 className="text-xl mb-2">{room.title}</h4>
+                                    <p className="text-sm text-text-muted mb-4 line-clamp-2">{room.description}</p>
                                     <div className="flex justify-between text-sm mb-4 bg-bg-light p-2 rounded">
                                         <span>Cooler: ₹{room.priceCooler}</span>
                                         <span>AC: ₹{room.priceAC}</span>
                                     </div>
                                     <div className="flex justify-end gap-2">
-                                        <button className="p-2 text-primary hover:bg-primary/10 rounded-lg"><Edit size={20} /></button>
+                                        <button 
+                                            onClick={() => openEditRoomModal(room)}
+                                            className="p-2 text-primary hover:bg-primary/10 rounded-lg"
+                                        ><Edit size={20} /></button>
                                         <button 
                                             onClick={() => deleteRoom(room._id)}
                                             className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg"
@@ -506,7 +573,6 @@ const AdminDashboard = () => {
                             <p className="text-text-muted mb-8 italic">
                                 Use this section to update your login credentials. Changes will take effect immediately.
                             </p>
-
                             <form onSubmit={handleUpdateCredentials} className="grid gap-6">
                                 {credentialMsg.text && (
                                     <div className={`p-4 rounded-xl text-sm ${credentialMsg.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
@@ -558,6 +624,118 @@ const AdminDashboard = () => {
                     </div>
                 )}
             </main>
+
+            {/* Room Add/Edit Modal */}
+            {isRoomModalOpen && (
+                <div className="fixed inset-0 z-[100] overflow-y-auto p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
+                    <div className="glass-card bg-white p-8 max-w-2xl w-full relative mx-auto my-auto">
+                        <button 
+                            onClick={() => setIsRoomModalOpen(false)}
+                            className="absolute top-6 right-6 text-gray-400 hover:text-secondary"
+                        >
+                            <X size={24} />
+                        </button>
+
+                        <h3 className="text-3xl font-playfair mb-8">{editingRoom ? 'Edit Room' : 'Add New Room'}</h3>
+
+                        <form onSubmit={handleSaveRoom} className="grid gap-6">
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2">Room Title</label>
+                                    <input 
+                                        type="text" 
+                                        className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+                                        required
+                                        value={roomFormData.title}
+                                        onChange={e => setRoomFormData({...roomFormData, title: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2">Sharing Type</label>
+                                    <select 
+                                        className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+                                        value={roomFormData.sharingType}
+                                        onChange={e => setRoomFormData({...roomFormData, sharingType: e.target.value})}
+                                    >
+                                        <option value="Single">Single</option>
+                                        <option value="Double">Double</option>
+                                        <option value="Triple">Triple</option>
+                                        <option value="Quadruple">Quadruple</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="grid md:grid-cols-2 gap-6">
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2">Price (Cooler)</label>
+                                    <input 
+                                        type="number" 
+                                        className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+                                        value={roomFormData.priceCooler}
+                                        onChange={e => setRoomFormData({...roomFormData, priceCooler: e.target.value})}
+                                    />
+                                </div>
+                                <div>
+                                    <label className="block text-sm font-semibold mb-2">Price (AC)</label>
+                                    <input 
+                                        type="number" 
+                                        className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+                                        value={roomFormData.priceAC}
+                                        onChange={e => setRoomFormData({...roomFormData, priceAC: e.target.value})}
+                                    />
+                                </div>
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">Amenities (Comma separated)</label>
+                                <input 
+                                    type="text" 
+                                    className="w-full p-3 border rounded-xl outline-none focus:border-primary"
+                                    placeholder="Free WiFi, Power Backup, Laundry..."
+                                    value={roomFormData.amenities}
+                                    onChange={e => setRoomFormData({...roomFormData, amenities: e.target.value})}
+                                />
+                            </div>
+
+                            <div>
+                                <label className="block text-sm font-semibold mb-2">Description</label>
+                                <textarea 
+                                    className="w-full p-3 border rounded-xl outline-none focus:border-primary h-32"
+                                    value={roomFormData.description}
+                                    onChange={e => setRoomFormData({...roomFormData, description: e.target.value})}
+                                ></textarea>
+                            </div>
+
+                            <div className="grid gap-4">
+                                <label className="block text-sm font-semibold">Room Images</label>
+                                <div className="grid grid-cols-4 gap-4">
+                                    {roomFormData.images.map((img, idx) => (
+                                        <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden border">
+                                            <img src={img} className="w-full h-full object-cover" />
+                                            <button 
+                                                type="button"
+                                                onClick={() => setRoomFormData({...roomFormData, images: roomFormData.images.filter((_, i) => i !== idx)})}
+                                                className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+                                            >
+                                                <X size={12} />
+                                            </button>
+                                        </div>
+                                    ))}
+                                    <label className="border-2 border-dashed rounded-xl flex flex-col items-center justify-center cursor-pointer hover:bg-gray-50 aspect-square">
+                                        <Upload size={24} className="text-gray-400 mb-2" />
+                                        <span className="text-xs text-gray-400">Upload</span>
+                                        <input type="file" className="hidden" onChange={e => handleImageUpload(e, url => setRoomFormData({...roomFormData, images: [...roomFormData.images, url]}))} />
+                                    </label>
+                                </div>
+                            </div>
+
+                            <button type="submit" className="btn-primary w-full py-4 mt-4">
+                                {editingRoom ? 'Update Room' : 'Add Room'}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
