@@ -163,6 +163,16 @@ const AdminDashboard = () => {
         }
     };
 
+    const updateBookingStatus = async (id, status) => {
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.put(`${API_BASE_URL}/bookings/${id}`, { status }, config);
+            fetchData();
+        } catch (error) {
+            alert("Error updating booking status");
+        }
+    };
+
     const handleSaveRoom = async (e) => {
         e.preventDefault();
         try {
@@ -482,43 +492,98 @@ const AdminDashboard = () => {
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
                     <div className="glass-card bg-white overflow-hidden">
-                        <div className="overflow-x-auto">
-                        <table className="w-full text-left min-w-[600px]">
-                            <thead className="bg-bg-light border-b border-gray-100">
-                                <tr>
-                                    <th className="p-4 font-semibold">Guest</th>
-                                    <th className="p-4 font-semibold">Room</th>
-                                    <th className="p-4 font-semibold">Check-In</th>
-                                    <th className="p-4 font-semibold">Status</th>
-                                    <th className="p-4 font-semibold">Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {bookings.map((booking) => (
-                                    <tr key={booking._id} className="border-b border-gray-50 hover:bg-bg-light/50 transition-colors">
-                                        <td className="p-4">
-                                            <div className="font-medium">{booking.guestName}</div>
+
+                        {/* Mobile: card layout (screens < 768px) */}
+                        <div className="block md:hidden divide-y divide-gray-100">
+                            {bookings.map((booking) => (
+                                <div key={booking._id} className="p-4 flex flex-col gap-3">
+                                    <div className="flex justify-between items-start">
+                                        <div>
+                                            <div className="font-semibold">{booking.guestName}</div>
                                             <div className="text-xs text-text-muted">{booking.phone}</div>
-                                        </td>
-                                        <td className="p-4">{booking.room?.title}</td>
-                                        <td className="p-4 text-sm">{new Date(booking.checkInDate).toLocaleDateString()}</td>
-                                        <td className="p-4">
-                                            <span className={`px-3 py-1 rounded-full text-xs font-bold ${
-                                                booking.status === 'Confirmed' ? 'bg-green-100 text-green-600' : 
-                                                booking.status === 'Cancelled' ? 'bg-red-100 text-red-600' : 
-                                                'bg-yellow-100 text-yellow-600'
-                                            }`}>
-                                                {booking.status}
-                                            </span>
-                                        </td>
-                                        <td className="p-4 flex gap-2">
-                                            <button className="p-1 text-green-600 hover:bg-green-50 rounded"><Check size={18} /></button>
-                                            <button className="p-1 text-red-600 hover:bg-red-50 rounded"><X size={18} /></button>
-                                        </td>
+                                        </div>
+                                        <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                            booking.status === 'Confirmed' ? 'bg-green-100 text-green-600' :
+                                            booking.status === 'Cancelled' ? 'bg-red-100 text-red-600' :
+                                            'bg-yellow-100 text-yellow-600'
+                                        }`}>
+                                            {booking.status}
+                                        </span>
+                                    </div>
+                                    <div className="text-sm text-text-muted flex gap-4">
+                                        <span>{booking.room?.title}</span>
+                                        <span>{new Date(booking.checkInDate).toLocaleDateString()}</span>
+                                    </div>
+                                    <div className="flex gap-2">
+                                        <button
+                                            onClick={() => updateBookingStatus(booking._id, 'Confirmed')}
+                                            disabled={booking.status === 'Confirmed'}
+                                            className="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-green-600 bg-green-50 rounded-xl disabled:opacity-40"
+                                        >
+                                            <Check size={16} /> Confirm
+                                        </button>
+                                        <button
+                                            onClick={() => updateBookingStatus(booking._id, 'Cancelled')}
+                                            disabled={booking.status === 'Cancelled'}
+                                            className="flex-1 flex items-center justify-center gap-1 py-2 text-sm font-medium text-red-500 bg-red-50 rounded-xl disabled:opacity-40"
+                                        >
+                                            <X size={16} /> Cancel
+                                        </button>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        {/* Desktop: table layout (screens >= 768px) */}
+                        <div className="hidden md:block overflow-x-auto">
+                            <table className="w-full text-left">
+                                <thead className="bg-bg-light border-b border-gray-100">
+                                    <tr>
+                                        <th className="p-4 font-semibold">Guest</th>
+                                        <th className="p-4 font-semibold">Room</th>
+                                        <th className="p-4 font-semibold">Check-In</th>
+                                        <th className="p-4 font-semibold">Status</th>
+                                        <th className="p-4 font-semibold">Actions</th>
                                     </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {bookings.map((booking) => (
+                                        <tr key={booking._id} className="border-b border-gray-50 hover:bg-bg-light/50 transition-colors">
+                                            <td className="p-4">
+                                                <div className="font-medium">{booking.guestName}</div>
+                                                <div className="text-xs text-text-muted">{booking.phone}</div>
+                                            </td>
+                                            <td className="p-4">{booking.room?.title}</td>
+                                            <td className="p-4 text-sm">{new Date(booking.checkInDate).toLocaleDateString()}</td>
+                                            <td className="p-4">
+                                                <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                                                    booking.status === 'Confirmed' ? 'bg-green-100 text-green-600' :
+                                                    booking.status === 'Cancelled' ? 'bg-red-100 text-red-600' :
+                                                    'bg-yellow-100 text-yellow-600'
+                                                }`}>
+                                                    {booking.status}
+                                                </span>
+                                            </td>
+                                            <td className="p-4">
+                                                <div className="flex gap-2">
+                                                    <button
+                                                        onClick={() => updateBookingStatus(booking._id, 'Confirmed')}
+                                                        title="Confirm"
+                                                        className="p-1 text-green-600 hover:bg-green-50 rounded disabled:opacity-40"
+                                                        disabled={booking.status === 'Confirmed'}
+                                                    ><Check size={18} /></button>
+                                                    <button
+                                                        onClick={() => updateBookingStatus(booking._id, 'Cancelled')}
+                                                        title="Cancel"
+                                                        className="p-1 text-red-600 hover:bg-red-50 rounded disabled:opacity-40"
+                                                        disabled={booking.status === 'Cancelled'}
+                                                    ><X size={18} /></button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 )}

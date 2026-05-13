@@ -343,6 +343,9 @@ section {
 .opacity-70 { opacity: 0.7; }
 .opacity-50 { opacity: 0.5; }
 .hidden { display: none; }
+.block { display: block; }
+.overflow-x-auto { overflow-x: auto; }
+.divide-y > * + * { border-top-width: 1px; border-color: #f3f4f6; }
 .shadow-sm { box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); }
 .shadow-md { box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); }
 .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
@@ -419,11 +422,30 @@ section {
 @media (min-width: 768px) {
   .md\:flex { display: flex; }
   .md\:hidden { display: none; }
+  .md\:block { display: block; }
   .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .md\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .md\:text-2xl { font-size: 1.5rem; }
+  .md\:text-4xl { font-size: 2.25rem; }
   .md\:text-7xl { font-size: 4.5rem; }
+  .md\:p-6 { padding: 1.5rem; }
+  .md\:p-8 { padding: 2rem; }
+  .md\:mb-10 { margin-bottom: 2.5rem; }
+  .md\:mb-6 { margin-bottom: 1.5rem; }
+  .md\:gap-4 { gap: 1rem; }
+  .md\:flex-row { flex-direction: row; }
+  .md\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+  .md\:top-6 { top: 1.5rem; }
+  .md\:right-6 { right: 1.5rem; }
+  .md\:text-base { font-size: 1rem; }
+  .md\:w-10 { width: 2.5rem; }
+  .md\:h-10 { height: 2.5rem; }
+  .md\:text-3xl { font-size: 1.875rem; }
+  .md\:mb-8 { margin-bottom: 2rem; }
+  .md\:gap-6 { gap: 1.5rem; }
+  .md\:grid-cols-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .md\:text-xl { font-size: 1.25rem; }
 }
 
 @media (min-width: 1024px) {
