@@ -41,6 +41,11 @@ app.post('/api/upload', protect, upload.single('image'), async (req, res) => {
     }
 });
 
+// Health check
+app.get('/health', (req, res) => {
+    res.send('OK');
+});
+
 // Basic route
 app.get('/', (req, res) => {
     res.send('Sahara Homestay API is running...');
