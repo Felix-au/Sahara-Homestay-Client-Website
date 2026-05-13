@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import RoomCard from '../components/RoomCard';
-import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
 import { X, MessageCircle } from 'lucide-react';
@@ -10,15 +10,32 @@ import { X, MessageCircle } from 'lucide-react';
 const Home = () => {
     const [rooms, setRooms] = useState([]);
     const [content, setContent] = useState({});
-    const [loading, setLoading] = useState(true);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
-    const [bookingData, setBookingData] = useState({
-        guestName: '',
-        email: '',
-        phone: '',
-        checkInDate: ''
-    });
+    const [bookingData, setBookingData] = useState({ guestName: '', email: '', phone: '', checkInDate: '' });
+    
+    // Contact form state
+    const [messageData, setMessageData] = useState({ guestName: '', email: '', phone: '', message: '' });
+    const [msgStatus, setMsgStatus] = useState('');
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const roomsRes = await axios.get('http://localhost:5000/api/rooms');
+                const contentRes = await axios.get('http://localhost:5000/api/content');
+                setRooms(roomsRes.data);
+                
+                const contentObj = {};
+                contentRes.data.forEach(item => {
+                    contentObj[item.section] = item.data;
+                });
+                setContent(contentObj);
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleBookingClick = (room) => {
         setSelectedRoom(room);
@@ -32,50 +49,38 @@ const Home = () => {
                 ...bookingData,
                 room: selectedRoom._id
             });
-            alert("Booking request submitted successfully! We will contact you soon.");
+            alert('Booking request submitted! We will contact you soon.');
             setIsBookingModalOpen(false);
             setBookingData({ guestName: '', email: '', phone: '', checkInDate: '' });
         } catch (error) {
-            alert("Error submitting booking. Please try again.");
+            alert('Error submitting booking');
         }
     };
 
     const handleWhatsAppSubmit = () => {
-        const message = `Hello, I would like to book a stay.\n\nRoom: ${selectedRoom.title}\nGuest: ${bookingData.guestName}\nPhone: ${bookingData.phone}\nCheck-in: ${bookingData.checkInDate}`;
-        const whatsappUrl = `https://wa.me/917300048228?text=${encodeURIComponent(message)}`;
-        window.open(whatsappUrl, '_blank');
+        const cleanPhone = content.contact?.phone?.replace(/\s+/g, '').replace(/[+-]/g, '') || '917300048228';
+        const text = `Hi, I am interested in booking:
+Room: ${selectedRoom.title}
+Guest Name: ${bookingData.guestName}
+Phone: ${bookingData.phone}
+Check-in Date: ${bookingData.checkInDate}`;
+        
+        const encodedText = encodeURIComponent(text);
+        window.open(`https://wa.me/${cleanPhone}?text=${encodedText}`, '_blank');
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const [roomsRes, contentRes] = await Promise.all([
-                    axios.get('http://localhost:5000/api/rooms'),
-                    axios.get('http://localhost:5000/api/content')
-                ]);
-                setRooms(roomsRes.data);
-                
-                const contentMap = {};
-                contentRes.data.forEach(item => {
-                    contentMap[item.section] = item.data;
-                });
-                setContent(contentMap);
-                setLoading(false);
-            } catch (error) {
-                console.error("Error fetching data:", error);
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    if (loading) {
-        return (
-            <div className="h-screen flex items-center justify-center">
-                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
-            </div>
-        );
-    }
+    const handleMessageSubmit = async (e) => {
+        e.preventDefault();
+        setMsgStatus('Sending...');
+        try {
+            await axios.post('http://localhost:5000/api/messages', messageData);
+            setMsgStatus('Message sent successfully!');
+            setMessageData({ guestName: '', email: '', phone: '', message: '' });
+            setTimeout(() => setMsgStatus(''), 3000);
+        } catch (error) {
+            setMsgStatus('Error sending message. Try again.');
+        }
+    };
 
     return (
         <>
@@ -91,7 +96,7 @@ const Home = () => {
                         <div className="underline"></div>
                     </div>
 
-                    <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${content.rooms_config?.columns || 3}, minmax(0, 1fr))` }}>
                         {rooms.map((room) => (
                             <RoomCard key={room._id} room={room} onBook={() => handleBookingClick(room)} />
                         ))}
@@ -195,11 +200,41 @@ const Home = () => {
                         </div>
                         <div className="glass-card p-10 bg-white">
                             <h3 className="text-2xl mb-6">Send Message</h3>
-                            <form className="flex flex-col gap-4">
-                                <input type="text" placeholder="Name" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none" />
-                                <input type="email" placeholder="Email" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none" />
-                                <textarea placeholder="Message" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none h-32"></textarea>
-                                <button className="btn-primary">Send Now</button>
+                            <form className="flex flex-col gap-4" onSubmit={handleMessageSubmit}>
+                                <input 
+                                    type="text" 
+                                    placeholder="Name" 
+                                    className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none"
+                                    required
+                                    value={messageData.guestName}
+                                    onChange={e => setMessageData({...messageData, guestName: e.target.value})}
+                                />
+                                <div className="grid grid-cols-2 gap-4">
+                                    <input 
+                                        type="tel" 
+                                        placeholder="Phone" 
+                                        className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none"
+                                        required
+                                        value={messageData.phone}
+                                        onChange={e => setMessageData({...messageData, phone: e.target.value})}
+                                    />
+                                    <input 
+                                        type="email" 
+                                        placeholder="Email (Optional)" 
+                                        className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none"
+                                        value={messageData.email}
+                                        onChange={e => setMessageData({...messageData, email: e.target.value})}
+                                    />
+                                </div>
+                                <textarea 
+                                    placeholder="Message" 
+                                    className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none h-32"
+                                    required
+                                    value={messageData.message}
+                                    onChange={e => setMessageData({...messageData, message: e.target.value})}
+                                ></textarea>
+                                <button type="submit" className="btn-primary">Send Now</button>
+                                {msgStatus && <p className="text-sm text-center mt-2 text-primary">{msgStatus}</p>}
                             </form>
                         </div>
                     </div>
@@ -236,17 +271,7 @@ const Home = () => {
                                 />
                             </div>
                             <div className="grid grid-cols-2 gap-4">
-                                <div>
-                                    <label className="block text-sm font-medium mb-1">Email</label>
-                                    <input 
-                                        type="email" 
-                                        className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
-                                        required
-                                        value={bookingData.email}
-                                        onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
-                                    />
-                                </div>
-                                <div>
+                                <div className="col-span-2 md:col-span-1">
                                     <label className="block text-sm font-medium mb-1">Phone</label>
                                     <input 
                                         type="tel" 
@@ -254,6 +279,16 @@ const Home = () => {
                                         required
                                         value={bookingData.phone}
                                         onChange={(e) => setBookingData({...bookingData, phone: e.target.value})}
+                                    />
+                                </div>
+                                <div className="col-span-2 md:col-span-1">
+                                    <label className="block text-sm font-medium mb-1">Email</label>
+                                    <input 
+                                        type="email" 
+                                        className="w-full p-3 bg-bg-light border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                        required
+                                        value={bookingData.email}
+                                        onChange={(e) => setBookingData({...bookingData, email: e.target.value})}
                                     />
                                 </div>
                             </div>
@@ -279,7 +314,7 @@ const Home = () => {
             )}
 
             {/* Floating WhatsApp Button */}
-            <a href="https://wa.me/917300048228" target="_blank" rel="noopener noreferrer" className="whatsapp-float">
+            <a href={`https://wa.me/${content.contact?.phone?.replace(/\s+/g, '').replace(/[+-]/g, '') || '917300048228'}`} target="_blank" rel="noopener noreferrer" className="whatsapp-float">
                 <MessageCircle size={35} />
             </a>
 

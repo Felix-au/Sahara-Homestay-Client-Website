@@ -185,9 +185,16 @@ section {
 
 @keyframes scrollTestimonials {
   0% { transform: translateY(0); }
-  33% { transform: translateY(-100px); }
-  66% { transform: translateY(-200px); }
-  100% { transform: translateY(0); }
+  100% { transform: translateY(-33.33%); }
+}
+
+.animate-scroll-vertical {
+  animation: scrollVertical 20s linear infinite;
+}
+
+@keyframes scrollVertical {
+  0% { transform: translateY(0); }
+  100% { transform: translateY(-50%); }
 }
 
 .testimonial-item {
@@ -196,6 +203,20 @@ section {
   flex-direction: column;
   justify-content: center;
   text-align: center;
+}
+
+.admin-image {
+  max-height: 200px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.admin-gallery-image {
+  max-height: 20vh;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
 /* Utilities */

@@ -76,6 +76,12 @@ const seedData = async () => {
                 }
             },
             {
+                section: 'rooms_config',
+                data: {
+                    columns: 3
+                }
+            },
+            {
                 section: 'contact',
                 data: {
                     phone: '+91 7300048228',
@@ -112,9 +118,9 @@ const seedData = async () => {
                 section: 'testimonials',
                 data: {
                     items: [
-                        { name: 'Rahul Sharma', text: 'Best homestay in Dharuhera! Very clean and quiet.' },
-                        { name: 'Amit Kumar', text: 'Great facilities and friendly management. Highly recommended.' },
-                        { name: 'Suresh Singh', text: 'Affordable and near the market. Perfect for students.' }
+                        { name: 'Rahul Sharma', text: 'Best homestay in Dharuhera! Very clean and quiet.', image: '' },
+                        { name: 'Amit Kumar', text: 'Great facilities and friendly management. Highly recommended.', image: '' },
+                        { name: 'Suresh Singh', text: 'Affordable and near the market. Perfect for students.', image: '' }
                     ]
                 }
             }
