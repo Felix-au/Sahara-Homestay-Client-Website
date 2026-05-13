@@ -3,19 +3,20 @@ import { motion } from 'framer-motion';
 
 const Hero = ({ content, testimonials }) => {
     return (
-        <section id="home" className="pt-40 pb-16 bg-white">
+        <section id="home" className="pt-32 pb-16 bg-white">
             <div className="container">
                 {/* Header Text - Centered at Top */}
+                <br></br><br></br>
                 <div className="text-center max-w-3xl mx-auto mb-16">
-                    <motion.h1 
+                    <motion.h1
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         className="text-4xl md:text-6xl font-playfair leading-tight mb-6"
                     >
                         Find comfort in your <span className="text-primary">home</span> <span className="text-primary">away</span> from home
                     </motion.h1>
-                    
-                    <motion.p 
+
+                    <motion.p
                         initial={{ opacity: 0, y: -20 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.2 }}
@@ -28,21 +29,21 @@ const Hero = ({ content, testimonials }) => {
                 {/* Two Columns Grid */}
                 <div className="grid md:grid-cols-2 gap-12 items-stretch">
                     {/* Left Column: Image */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.4 }}
                         className="rounded-3xl overflow-hidden shadow-2xl h-[400px] md:h-[500px]"
                     >
-                        <img 
-                            src={content?.image || "/herosectionimg.jpeg"} 
-                            alt="Hero" 
+                        <img
+                            src={content?.image || "/herosectionimg.jpeg"}
+                            alt="Hero"
                             className="w-full h-full object-cover"
                         />
                     </motion.div>
 
                     {/* Right Column: Rolling Testimonials */}
-                    <motion.div 
+                    <motion.div
                         initial={{ opacity: 0, x: 50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: 0.6 }}
