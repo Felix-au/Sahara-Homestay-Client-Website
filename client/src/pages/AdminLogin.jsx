@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
 import { Lock, User, AlertCircle } from 'lucide-react';
 
@@ -16,7 +17,7 @@ const AdminLogin = () => {
         setError('');
 
         try {
-            const { data } = await axios.post('http://localhost:5000/api/auth/login', {
+            const { data } = await axios.post(`${API_BASE_URL}/auth/login`, {
                 username,
                 password
             });

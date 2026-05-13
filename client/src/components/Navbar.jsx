@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X, Home } from 'lucide-react';
+import { API_BASE_URL } from '../config';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -14,7 +15,7 @@ const Navbar = () => {
         window.addEventListener('scroll', handleScroll);
 
         // Fetch phone number
-        fetch('http://localhost:5000/api/content/contact')
+        fetch(`${API_BASE_URL}/content/contact`)
             .then(res => res.json())
             .then(data => {
                 if (data.data?.phone) setPhone(data.data.phone);

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import RoomCard from '../components/RoomCard';
@@ -21,8 +22,8 @@ const Home = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const roomsRes = await axios.get('http://localhost:5000/api/rooms');
-                const contentRes = await axios.get('http://localhost:5000/api/content');
+                const roomsRes = await axios.get(`${API_BASE_URL}/rooms`);
+                const contentRes = await axios.get(`${API_BASE_URL}/content`);
                 setRooms(roomsRes.data);
                 
                 const contentObj = {};
@@ -45,7 +46,7 @@ const Home = () => {
     const handleBookingSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/api/bookings', {
+            await axios.post(`${API_BASE_URL}/bookings`, {
                 ...bookingData,
                 room: selectedRoom._id
             });
@@ -73,7 +74,7 @@ Check-in Date: ${bookingData.checkInDate}`;
         e.preventDefault();
         setMsgStatus('Sending...');
         try {
-            await axios.post('http://localhost:5000/api/messages', messageData);
+            await axios.post(`${API_BASE_URL}/messages`, messageData);
             setMsgStatus('Message sent successfully!');
             setMessageData({ guestName: '', email: '', phone: '', message: '' });
             setTimeout(() => setMsgStatus(''), 3000);

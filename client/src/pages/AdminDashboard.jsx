@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { API_BASE_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
 import { 
     LayoutDashboard, 
@@ -48,10 +49,10 @@ const AdminDashboard = () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
             const [roomsRes, contentRes, bookingsRes, messagesRes] = await Promise.all([
-                axios.get('http://localhost:5000/api/rooms'),
-                axios.get('http://localhost:5000/api/content'),
-                axios.get('http://localhost:5000/api/bookings', config),
-                axios.get('http://localhost:5000/api/messages', config)
+                axios.get(`${API_BASE_URL}/rooms`),
+                axios.get(`${API_BASE_URL}/content`),
+                axios.get(`${API_BASE_URL}/bookings`, config),
+                axios.get(`${API_BASE_URL}/messages`, config)
             ]);
             setRooms(roomsRes.data);
             setContent(contentRes.data);
@@ -88,7 +89,7 @@ const AdminDashboard = () => {
                     'Content-Type': 'multipart/form-data'
                 } 
             };
-            const { data } = await axios.post('http://localhost:5000/api/upload', formData, config);
+            const { data } = await axios.post(`${API_BASE_URL}/upload`, formData, config);
             callback(data.url);
         } catch (error) {
             alert("Upload failed: " + (error.response?.data?.message || error.message));
@@ -103,7 +104,7 @@ const AdminDashboard = () => {
         
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const { data } = await axios.put('http://localhost:5000/api/auth/update', credentials, config);
+            const { data } = await axios.put(`${API_BASE_URL}/auth/update`, credentials, config);
             setCredentialMsg({ type: 'success', text: data.message });
             setCredentials({ username: '', password: '' });
             // Update username in local display if it was changed
@@ -118,7 +119,7 @@ const AdminDashboard = () => {
     const updateContent = async (section, data) => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            await axios.put(`http://localhost:5000/api/content/${section}`, data, config);
+            await axios.put(`${API_BASE_URL}/content/${section}`, data, config);
             setIsEditingContent(null);
             fetchData();
         } catch (error) {
@@ -130,7 +131,7 @@ const AdminDashboard = () => {
         if (window.confirm("Are you sure you want to delete this room?")) {
             try {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/rooms/${id}`, config);
+                await axios.delete(`${API_BASE_URL}/rooms/${id}`, config);
                 fetchData();
             } catch (error) {
                 alert("Error deleting room");
@@ -142,7 +143,7 @@ const AdminDashboard = () => {
         if (window.confirm("Are you sure you want to delete this message?")) {
             try {
                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                await axios.delete(`http://localhost:5000/api/messages/${id}`, config);
+                await axios.delete(`${API_BASE_URL}/messages/${id}`, config);
                 fetchData();
             } catch (error) {
                 alert("Error deleting message");
@@ -440,7 +441,7 @@ const AdminDashboard = () => {
                                             <Upload size={16} />
                                             <input type="file" className="hidden" onChange={e => handleImageUpload(e, url => {
                                                 const config = { headers: { Authorization: `Bearer ${token}` } };
-                                                axios.put(`http://localhost:5000/api/rooms/${room._id}`, { images: [url] }, config).then(fetchData);
+                                                axios.put(`${API_BASE_URL}/rooms/${room._id}`, { images: [url] }, config).then(fetchData);
                                             })} />
                                         </label>
                                     </div>
