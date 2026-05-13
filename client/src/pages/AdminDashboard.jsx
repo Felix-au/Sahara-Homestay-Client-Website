@@ -171,7 +171,7 @@ const AdminDashboard = () => {
                 {/* Content Management Tab */}
                 {activeTab === 'content' && (
                     <div className="grid gap-8">
-                        {content.map((item) => (
+                        {content.filter(item => item.section !== 'rooms_config').map((item) => (
                             <div key={item._id} className="glass-card p-8 bg-white">
                                 <div className="flex justify-between items-center mb-6">
                                     <h3 className="text-2xl font-playfair capitalize">{item.section.replace('_', ' ')} Section</h3>
