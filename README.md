@@ -1,5 +1,4 @@
 <p align="center">
-  <img src="client/public/favicon.ico" width="100" alt="Sahara Homestay Logo"/>
 </p>
 <h1 align="center">Sahara Homestay: Premium Living Reimagined</h1>
 <p align="center">
@@ -74,10 +73,10 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 │  │ Vite + React  │◄──►│  │ API Routes │  │ Authentication │  │  │
 │  │ Tailwind CSS  │    │  │ (REST)     │  │ (JWT)          │  │  │
 │  │ Framer Motion │    │  └─────┬──────┘  └────────────────┘  │  │
-│  └───────────────┘    │        │          ┌───────────────┐  │  │
-│                       │  ┌─────▼──────┐  │ Image Hosting │  │  │
-│                       │  │   MongoDB  │  │ (ImgBB API)   │  │  │
-│                       │  │   Atlas    │  └───────────────┘  │  │
+│  └───────────────┘    │        │         ┌───────────────┐   │  │
+│                       │  ┌─────▼──────┐  │ Image Hosting │   │  │
+│                       │  │   MongoDB  │  │ (ImgBB API)   │   │  │
+│                       │  │   Atlas    │  └───────────────┘   │  │
 │                       │  └────────────┘                      │  │
 │                       └──────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
