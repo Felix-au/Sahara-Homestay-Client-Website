@@ -30,6 +30,8 @@ const AdminDashboard = () => {
     const [isEditingContent, setIsEditingContent] = useState(null);
     const [editData, setEditData] = useState({});
     const [uploading, setUploading] = useState(false);
+    const [credentials, setCredentials] = useState({ username: '', password: '' });
+    const [credentialMsg, setCredentialMsg] = useState({ type: '', text: '' });
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -92,6 +94,24 @@ const AdminDashboard = () => {
             alert("Upload failed: " + (error.response?.data?.message || error.message));
         } finally {
             setUploading(false);
+        }
+    };
+
+    const handleUpdateCredentials = async (e) => {
+        e.preventDefault();
+        setCredentialMsg({ type: '', text: '' });
+        
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const { data } = await axios.put('http://localhost:5000/api/auth/update', credentials, config);
+            setCredentialMsg({ type: 'success', text: data.message });
+            setCredentials({ username: '', password: '' });
+            // Update username in local display if it was changed
+            if (credentials.username) {
+                // You might want to update local storage or user state here if needed
+            }
+        } catch (error) {
+            setCredentialMsg({ type: 'error', text: error.response?.data?.message || 'Update failed' });
         }
     };
 
@@ -169,6 +189,13 @@ const AdminDashboard = () => {
                     >
                         <Mail size={20} />
                         Messages
+                    </button>
+                    <button 
+                        onClick={() => setActiveTab('settings')}
+                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
+                    >
+                        <Settings size={20} />
+                        Admin Settings
                     </button>
                 </nav>
 
@@ -514,6 +541,68 @@ const AdminDashboard = () => {
                                 ))}
                             </div>
                         )}
+                    </div>
+                {/* Admin Settings Tab */}
+                {activeTab === 'settings' && (
+                    <div className="max-w-2xl mx-auto">
+                        <div className="glass-card p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
+                            <h2 className="text-3xl font-playfair mb-6 flex items-center gap-3">
+                                <Settings className="text-primary" /> 
+                                Update Admin Credentials
+                            </h2>
+                            
+                            <p className="text-text-muted mb-8 italic">
+                                Use this section to update your login credentials. Changes will take effect immediately.
+                            </p>
+
+                            <form onSubmit={handleUpdateCredentials} className="grid gap-6">
+                                {credentialMsg.text && (
+                                    <div className={`p-4 rounded-xl text-sm ${credentialMsg.type === 'success' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>
+                                        {credentialMsg.text}
+                                    </div>
+                                )}
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-gray-600 px-1">New Username (Optional)</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <LayoutDashboard size={18} className="text-gray-400" />
+                                        </div>
+                                        <input 
+                                            type="text" 
+                                            className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                            placeholder="Enter new username"
+                                            value={credentials.username}
+                                            onChange={(e) => setCredentials({...credentials, username: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-gray-600 px-1">New Password (Optional)</label>
+                                    <div className="relative">
+                                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                            <Settings size={18} className="text-gray-400" />
+                                        </div>
+                                        <input 
+                                            type="password" 
+                                            className="w-full pl-10 pr-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                                            placeholder="Enter new password"
+                                            value={credentials.password}
+                                            onChange={(e) => setCredentials({...credentials, password: e.target.value})}
+                                        />
+                                    </div>
+                                </div>
+
+                                <button 
+                                    type="submit"
+                                    className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-lg shadow-primary/20 hover:bg-primary-dark transition-all flex items-center justify-center gap-2 mt-4"
+                                >
+                                    <Save size={20} />
+                                    Update Credentials
+                                </button>
+                            </form>
+                        </div>
                     </div>
                 )}
             </main>
