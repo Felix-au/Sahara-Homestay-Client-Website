@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { API_BASE_URL } from '../config';
 import { useNavigate } from 'react-router-dom';
+import AdminNavbar from '../components/AdminNavbar';
 import { 
     LayoutDashboard, 
     Bed, 
@@ -154,63 +155,11 @@ const AdminDashboard = () => {
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
 
     return (
-        <div className="flex h-screen bg-bg-light">
-            {/* Sidebar */}
-            <aside className="w-64 bg-secondary text-white p-6 flex flex-col">
-                <div className="flex items-center gap-3 mb-12">
-                    <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
-                    <span className="text-xl font-bold font-playfair">Admin Console</span>
-                </div>
-
-                <nav className="flex flex-col gap-2 flex-grow">
-                    <button 
-                        onClick={() => setActiveTab('content')}
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'content' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
-                    >
-                        <LayoutDashboard size={20} />
-                        Site Content
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('rooms')}
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'rooms' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
-                    >
-                        <Bed size={20} />
-                        Manage Rooms
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('bookings')}
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'bookings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
-                    >
-                        <MessageSquare size={20} />
-                        Bookings
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('msgs')}
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'msgs' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
-                    >
-                        <Mail size={20} />
-                        Messages
-                    </button>
-                    <button 
-                        onClick={() => setActiveTab('settings')}
-                        className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
-                    >
-                        <Settings size={20} />
-                        Admin Settings
-                    </button>
-                </nav>
-
-                <button 
-                    onClick={handleLogout}
-                    className="flex items-center gap-3 p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all mt-auto"
-                >
-                    <LogOut size={20} />
-                    Logout
-                </button>
-            </aside>
+        <div className="min-h-screen bg-bg-light">
+            <AdminNavbar activeTab={activeTab} setActiveTab={setActiveTab} handleLogout={handleLogout} />
 
             {/* Main Content */}
-            <main className="flex-grow p-10 overflow-y-auto">
+            <main className="container pt-28 pb-10">
                 <header className="flex justify-between items-center mb-10">
                     <h1 className="text-4xl font-playfair capitalize">{activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}</h1>
                     <div className="flex items-center gap-4">
