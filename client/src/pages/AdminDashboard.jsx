@@ -18,8 +18,7 @@ import {
     MapPin,
     Quote,
     Upload,
-    Mail,
-    Menu as MenuIcon
+    Mail
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -34,7 +33,6 @@ const AdminDashboard = () => {
     const [uploading, setUploading] = useState(false);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [credentialMsg, setCredentialMsg] = useState({ type: '', text: '' });
-    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -156,77 +154,55 @@ const AdminDashboard = () => {
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
 
     return (
-        <div className="flex flex-col md:flex-row h-screen bg-bg-light overflow-hidden">
-            {/* Mobile Header */}
-            <div className="md:hidden bg-secondary text-white p-4 flex items-center justify-between z-[60]">
-                <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
-                    <span className="text-xl font-bold font-playfair">Admin</span>
-                </div>
-                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
-                    {isSidebarOpen ? <X size={28} /> : <MenuIcon size={28} />}
-                </button>
-            </div>
-
-            {/* Sidebar Overlay for Mobile */}
-            {isSidebarOpen && (
-                <div 
-                    className="md:hidden fixed inset-0 bg-black/50 z-[50] backdrop-blur-sm"
-                    onClick={() => setIsSidebarOpen(false)}
-                ></div>
-            )}
-
+        <div className="flex h-screen bg-bg-light">
             {/* Sidebar */}
-            <aside className={`
-                fixed md:relative inset-y-0 left-0 z-[55] w-64 bg-secondary text-white p-6 flex flex-col transition-transform duration-300
-                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
-            `}>
-                <div className="hidden md:flex items-center gap-3 mb-12">
+            <aside className="w-64 bg-secondary text-white p-6 flex flex-col">
+                <div className="flex items-center gap-3 mb-12">
                     <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
                     <span className="text-xl font-bold font-playfair">Admin Console</span>
                 </div>
 
                 <nav className="flex flex-col gap-2 flex-grow">
                     <button 
-                        onClick={() => { setActiveTab('content'); setIsSidebarOpen(false); }}
+                        onClick={() => setActiveTab('content')}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'content' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <LayoutDashboard size={20} />
                         Site Content
                     </button>
                     <button 
-                        onClick={() => { setActiveTab('rooms'); setIsSidebarOpen(false); }}
+                        onClick={() => setActiveTab('rooms')}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'rooms' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Bed size={20} />
                         Manage Rooms
                     </button>
                     <button 
-                        onClick={() => { setActiveTab('bookings'); setIsSidebarOpen(false); }}
+                        onClick={() => setActiveTab('bookings')}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'bookings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <MessageSquare size={20} />
                         Bookings
                     </button>
                     <button 
-                        onClick={() => { setActiveTab('msgs'); setIsSidebarOpen(false); }}
+                        onClick={() => setActiveTab('msgs')}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'msgs' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Mail size={20} />
                         Messages
                     </button>
                     <button 
-                        onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}
+                        onClick={() => setActiveTab('settings')}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Settings size={20} />
-                        Settings
+                        Admin Settings
                     </button>
                 </nav>
 
                 <button 
                     onClick={handleLogout}
-                    className="flex items-center gap-3 p-3 text-red-400 hover:bg-white/5 rounded-xl transition-all mt-auto"
+                    className="flex items-center gap-3 p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all mt-auto"
                 >
                     <LogOut size={20} />
                     Logout
@@ -234,19 +210,12 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 overflow-y-auto p-4 md:p-8">
-                <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
-                    <h1 className="text-3xl md:text-4xl font-playfair capitalize">
-                        {activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}
-                    </h1>
+            <main className="flex-grow p-10 overflow-y-auto">
+                <header className="flex justify-between items-center mb-10">
+                    <h1 className="text-4xl font-playfair capitalize">{activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}</h1>
                     <div className="flex items-center gap-4">
-                        <div className="text-right hidden sm:block">
-                            <p className="text-sm font-bold text-secondary">Administrator</p>
-                            <p className="text-xs text-text-muted">Sahara Homestay</p>
-                        </div>
-                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
-                            A
-                        </div>
+                        <span className="text-text-muted">Welcome, Admin</span>
+                        <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">A</div>
                     </div>
                 </header>
 
@@ -497,8 +466,7 @@ const AdminDashboard = () => {
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
                     <div className="glass-card bg-white overflow-hidden">
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left min-w-[600px]">
+                        <table className="w-full text-left">
                             <thead className="bg-bg-light border-b border-gray-100">
                                 <tr>
                                     <th className="p-4 font-semibold">Guest</th>
@@ -533,8 +501,7 @@ const AdminDashboard = () => {
                                     </tr>
                                 ))}
                             </tbody>
-                            </table>
-                        </div>
+                        </table>
                     </div>
                 )}
 
