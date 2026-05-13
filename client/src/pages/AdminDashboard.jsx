@@ -12,7 +12,11 @@ import {
     Trash2, 
     Check, 
     X,
-    Save
+    Save,
+    Image as ImageIcon,
+    MapPin,
+    Quote,
+    Upload
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -23,6 +27,7 @@ const AdminDashboard = () => {
     const [loading, setLoading] = useState(true);
     const [isEditingContent, setIsEditingContent] = useState(null);
     const [editData, setEditData] = useState({});
+    const [uploading, setUploading] = useState(false);
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -59,6 +64,30 @@ const AdminDashboard = () => {
     const handleLogout = () => {
         localStorage.removeItem('adminToken');
         navigate('/admin');
+    };
+
+    const handleImageUpload = async (e, callback) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        setUploading(true);
+        const formData = new FormData();
+        formData.append('image', file);
+
+        try {
+            const config = { 
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                    'Content-Type': 'multipart/form-data'
+                } 
+            };
+            const { data } = await axios.post('http://localhost:5000/api/upload', formData, config);
+            callback(data.url);
+        } catch (error) {
+            alert("Upload failed: " + (error.response?.data?.message || error.message));
+        } finally {
+            setUploading(false);
+        }
     };
 
     const updateContent = async (section, data) => {
@@ -174,21 +203,91 @@ const AdminDashboard = () => {
                                 </div>
 
                                 <div className="grid gap-4">
-                                    {Object.keys(item.data).map((key) => (
-                                        <div key={key}>
-                                            <label className="block text-sm font-medium text-text-muted mb-1 capitalize">{key}</label>
-                                            {isEditingContent === item.section ? (
-                                                <input 
-                                                    type="text"
-                                                    className="w-full p-3 border border-gray-200 rounded-lg focus:border-primary outline-none"
-                                                    value={editData[key] || ''}
-                                                    onChange={(e) => setEditData({...editData, [key]: e.target.value})}
-                                                />
-                                            ) : (
-                                                <p className="p-3 bg-bg-light rounded-lg text-text-main">{item.data[key]}</p>
-                                            )}
+                                    {/* Specialized Editors */}
+                                    {item.section === 'hero' && isEditingContent === 'hero' && (
+                                        <div className="grid gap-4">
+                                            <input type="text" className="w-full p-3 border rounded-lg" value={editData.title} onChange={e => setEditData({...editData, title: e.target.value})} placeholder="Title" />
+                                            <input type="text" className="w-full p-3 border rounded-lg" value={editData.subtitle} onChange={e => setEditData({...editData, subtitle: e.target.value})} placeholder="Subtitle" />
+                                            <div className="flex items-center gap-4">
+                                                <img src={editData.image} className="w-20 h-20 object-cover rounded" />
+                                                <input type="file" onChange={e => handleImageUpload(e, url => setEditData({...editData, image: url}))} />
+                                            </div>
                                         </div>
-                                    ))}
+                                    )}
+
+                                    {item.section === 'gallery' && (
+                                        <div className="grid gap-4">
+                                            <div className="flex items-center gap-4">
+                                                <label>Columns:</label>
+                                                <input type="number" className="p-2 border rounded" value={isEditingContent === 'gallery' ? editData.columns : item.data.columns} onChange={e => setEditData({...editData, columns: e.target.value})} disabled={isEditingContent !== 'gallery'} />
+                                            </div>
+                                            <div className="grid grid-cols-4 gap-4">
+                                                {(isEditingContent === 'gallery' ? editData.images : item.data.images).map((img, idx) => (
+                                                    <div key={idx} className="relative group">
+                                                        <img src={img} className="w-full h-24 object-cover rounded" />
+                                                        {isEditingContent === 'gallery' && (
+                                                            <button onClick={() => setEditData({...editData, images: editData.images.filter((_, i) => i !== idx)})} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full"><X size={12} /></button>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                                {isEditingContent === 'gallery' && (
+                                                    <label className="border-2 border-dashed rounded flex items-center justify-center cursor-pointer hover:bg-gray-50 h-24">
+                                                        <Upload size={24} className="text-gray-400" />
+                                                        <input type="file" className="hidden" onChange={e => handleImageUpload(e, url => setEditData({...editData, images: [...editData.images, url]}))} />
+                                                    </label>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {item.section === 'locations' && (
+                                        <div className="grid gap-4">
+                                             <div className="flex items-center gap-4">
+                                                <label>Columns:</label>
+                                                <input type="number" className="p-2 border rounded" value={isEditingContent === 'locations' ? editData.columns : item.data.columns} onChange={e => setEditData({...editData, columns: e.target.value})} disabled={isEditingContent !== 'locations'} />
+                                            </div>
+                                            <div className="grid gap-4">
+                                                {(isEditingContent === 'locations' ? editData.maps : item.data.maps).map((mapHtml, idx) => (
+                                                    <div key={idx} className="flex gap-4 items-start">
+                                                        <div className="flex-grow">
+                                                            <textarea className="w-full p-2 border rounded text-xs h-20" value={mapHtml} onChange={e => {
+                                                                const newMaps = [...editData.maps];
+                                                                newMaps[idx] = e.target.value;
+                                                                setEditData({...editData, maps: newMaps});
+                                                            }} disabled={isEditingContent !== 'locations'} />
+                                                        </div>
+                                                        {isEditingContent === 'locations' && (
+                                                            <button onClick={() => setEditData({...editData, maps: editData.maps.filter((_, i) => i !== idx)})} className="p-2 bg-red-100 text-red-500 rounded"><Trash2 size={16} /></button>
+                                                        )}
+                                                    </div>
+                                                ))}
+                                                {isEditingContent === 'locations' && (
+                                                    <button onClick={() => setEditData({...editData, maps: [...editData.maps, '']})} className="btn-primary self-start text-xs py-2 px-4">Add Map Embed</button>
+                                                )}
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {/* Default Generic Editor */}
+                                    {item.section !== 'hero' && item.section !== 'gallery' && item.section !== 'locations' && (
+                                        <div className="grid gap-4">
+                                            {Object.keys(item.data).map((key) => (
+                                                <div key={key}>
+                                                    <label className="block text-sm font-medium text-text-muted mb-1 capitalize">{key}</label>
+                                                    {isEditingContent === item.section ? (
+                                                        <input 
+                                                            type="text"
+                                                            className="w-full p-3 border border-gray-200 rounded-lg focus:border-primary outline-none"
+                                                            value={editData[key] || ''}
+                                                            onChange={(e) => setEditData({...editData, [key]: e.target.value})}
+                                                        />
+                                                    ) : (
+                                                        <p className="p-3 bg-bg-light rounded-lg text-text-main">{item.data[key]}</p>
+                                                    )}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
                                 </div>
                             </div>
                         ))}
@@ -205,11 +304,21 @@ const AdminDashboard = () => {
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                             {rooms.map((room) => (
                                 <div key={room._id} className="glass-card bg-white p-6">
-                                    <div className="h-40 rounded-xl overflow-hidden mb-4">
+                                    <div className="h-40 rounded-xl overflow-hidden mb-4 relative">
                                         <img src={room.images[0]} className="w-full h-full object-cover" />
+                                        <label className="absolute bottom-2 right-2 bg-black/50 text-white p-2 rounded-full cursor-pointer hover:bg-black/70">
+                                            <Upload size={16} />
+                                            <input type="file" className="hidden" onChange={e => handleImageUpload(e, url => {
+                                                const config = { headers: { Authorization: `Bearer ${token}` } };
+                                                axios.put(`http://localhost:5000/api/rooms/${room._id}`, { images: [url] }, config).then(fetchData);
+                                            })} />
+                                        </label>
                                     </div>
                                     <h4 className="text-xl mb-2">{room.title}</h4>
-                                    <p className="text-primary font-bold mb-4">₹{room.price}/month</p>
+                                    <div className="flex justify-between text-sm mb-4 bg-bg-light p-2 rounded">
+                                        <span>Cooler: ₹{room.priceCooler}</span>
+                                        <span>AC: ₹{room.priceAC}</span>
+                                    </div>
                                     <div className="flex justify-end gap-2">
                                         <button className="p-2 text-primary hover:bg-primary/10 rounded-lg"><Edit size={20} /></button>
                                         <button 

@@ -1,5 +1,5 @@
-import React from 'react';
-import { Home, Facebook, Instagram, Twitter, Mail, Phone } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Home, Facebook, Instagram, Twitter, Mail, Phone, Menu, X, Share2, Camera, Send } from 'lucide-react';
 
 const Footer = () => {
     return (
@@ -18,13 +18,13 @@ const Footer = () => {
                         </p>
                         <div className="flex gap-4">
                             <a href="#" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-primary hover:border-primary transition-all">
-                                <Instagram size={18} />
+                                <Camera size={18} />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-primary hover:border-primary transition-all">
-                                <Facebook size={18} />
+                                <Share2 size={18} />
                             </a>
                             <a href="#" className="w-10 h-10 rounded-full border border-gray-700 flex items-center justify-center hover:bg-primary hover:border-primary transition-all">
-                                <Twitter size={18} />
+                                <Send size={18} />
                             </a>
                         </div>
                     </div>
@@ -54,15 +54,15 @@ const Footer = () => {
                         <ul className="flex flex-col gap-4 text-gray-400">
                             <li className="flex items-center gap-3">
                                 <Phone size={18} className="text-primary" />
-                                +91 99999 99999
+                                +91 7300048228
                             </li>
                             <li className="flex items-center gap-3">
                                 <Mail size={18} className="text-primary" />
-                                contact@saharahomestay.in
+                                saharahomestay.dhr@gmail.com
                             </li>
                             <li className="flex items-start gap-3">
                                 <Home size={18} className="text-primary mt-1" />
-                                Sector 6, Near Main Market, Dharuhera, Haryana
+                                Plot No 116 Sector 6 Near Primary Govt School Dharuehra Rewari Haryana 123106
                             </li>
                         </ul>
                     </div>

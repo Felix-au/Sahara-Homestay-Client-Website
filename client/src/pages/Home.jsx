@@ -5,7 +5,7 @@ import RoomCard from '../components/RoomCard';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import { motion } from 'framer-motion';
-import { X } from 'lucide-react';
+import { X, MessageCircle } from 'lucide-react';
 
 const Home = () => {
     const [rooms, setRooms] = useState([]);
@@ -40,6 +40,12 @@ const Home = () => {
         }
     };
 
+    const handleWhatsAppSubmit = () => {
+        const message = `Hello, I would like to book a stay.\n\nRoom: ${selectedRoom.title}\nGuest: ${bookingData.guestName}\nPhone: ${bookingData.phone}\nCheck-in: ${bookingData.checkInDate}`;
+        const whatsappUrl = `https://wa.me/917300048228?text=${encodeURIComponent(message)}`;
+        window.open(whatsappUrl, '_blank');
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -49,7 +55,6 @@ const Home = () => {
                 ]);
                 setRooms(roomsRes.data);
                 
-                // Convert content array to object
                 const contentMap = {};
                 contentRes.data.forEach(item => {
                     contentMap[item.section] = item.data;
@@ -75,7 +80,7 @@ const Home = () => {
     return (
         <>
             <Navbar />
-            <Hero content={content.hero} />
+            <Hero content={content.hero} testimonials={content.testimonials} />
 
             {/* Rooms Section */}
             <section id="rooms" className="bg-bg-light">
@@ -93,6 +98,43 @@ const Home = () => {
                     </div>
                 </div>
             </section>
+
+            {/* Gallery Section */}
+            {content.gallery && content.gallery.images && (
+                <section id="gallery" className="bg-white">
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>Gallery</h2>
+                            <div className="underline"></div>
+                        </div>
+                        <div className="gallery-grid" style={{ gridTemplateColumns: `repeat(${content.gallery.columns || 4}, minmax(0, 1fr))` }}>
+                            {content.gallery.images.map((img, idx) => (
+                                <div key={idx} className="gallery-item">
+                                    <img src={img} alt={`Gallery ${idx + 1}`} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
+
+            {/* Dynamic Locations Section */}
+            {content.locations && content.locations.maps && (
+                <section id="locations" className="bg-bg-light">
+                    <div className="container">
+                        <div className="section-title">
+                            <h2>Places You Will Find Us</h2>
+                            <div className="underline"></div>
+                        </div>
+                        <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${content.locations.columns || 2}, minmax(0, 1fr))` }}>
+                            {content.locations.maps.map((mapHtml, idx) => (
+                                <div key={idx} className="h-[400px] rounded-3xl overflow-hidden shadow-xl border-4 border-white" dangerouslySetInnerHTML={{ __html: mapHtml }}>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </section>
+            )}
 
             {/* Amenities Section */}
             <section id="amenities" className="bg-white">
@@ -124,42 +166,41 @@ const Home = () => {
                 </div>
             </section>
 
-            {/* Map Section */}
+            {/* Contact Section */}
             <section id="contact" className="bg-bg-light">
                 <div className="container">
-                    <div className="section-title">
-                        <h2>Locate Us</h2>
-                        <div className="underline"></div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-8 items-center">
-                        <div className="glass-card p-8">
-                            <h3 className="text-3xl mb-6 font-playfair">Visit Our Branches</h3>
+                    <div className="grid md:grid-cols-2 gap-12 items-center">
+                        <div>
+                            <h2 className="text-4xl font-playfair mb-6">Contact Us</h2>
                             <div className="flex flex-col gap-6">
                                 <div>
-                                    <h4 className="text-primary text-xl mb-2">Branch 1 - Dharuhera</h4>
-                                    <p className="text-text-muted">Sector 6, Near Main Market, Dharuhera, Haryana</p>
+                                    <h4 className="text-primary text-xl mb-2">Location</h4>
+                                    <p className="text-text-muted">{content.contact?.address}</p>
+                                </div>
+                                <div className="grid grid-cols-2 gap-6">
+                                    <div>
+                                        <h4 className="text-primary text-xl mb-2">Phone</h4>
+                                        <p className="text-text-muted">{content.contact?.phone}</p>
+                                    </div>
+                                    <div>
+                                        <h4 className="text-primary text-xl mb-2">Email</h4>
+                                        <p className="text-text-muted">{content.contact?.email}</p>
+                                    </div>
                                 </div>
                                 <div>
-                                    <h4 className="text-primary text-xl mb-2">Branch 2 - Rewari</h4>
-                                    <p className="text-text-muted">Model Town, Rewari, Haryana</p>
-                                </div>
-                                <div className="mt-4">
-                                    <p className="font-bold">Call Us:</p>
-                                    <p className="text-2xl text-primary font-playfair">{content.contact?.phone || "+91 99999 99999"}</p>
+                                    <h4 className="text-primary text-xl mb-2">Working Time</h4>
+                                    <p className="text-text-muted">{content.contact?.workingTime}</p>
                                 </div>
                             </div>
                         </div>
-                        
-                        <div className="h-[400px] rounded-3xl overflow-hidden shadow-2xl border-4 border-white">
-                            <iframe 
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d112440.16041078721!2d76.6713757!3d28.2016259!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390d402377317799%3A0xc47e30776b9116c4!2sDharuhera%2C%20Haryana!5e0!3m2!1sen!2sin!4v1715560000000!5m2!1sen!2sin" 
-                                width="100%" 
-                                height="100%" 
-                                style={{ border: 0 }} 
-                                allowFullScreen="" 
-                                loading="lazy"
-                            ></iframe>
+                        <div className="glass-card p-10 bg-white">
+                            <h3 className="text-2xl mb-6">Send Message</h3>
+                            <form className="flex flex-col gap-4">
+                                <input type="text" placeholder="Name" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none" />
+                                <input type="email" placeholder="Email" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none" />
+                                <textarea placeholder="Message" className="p-4 bg-bg-light border border-gray-200 rounded-xl outline-none h-32"></textarea>
+                                <button className="btn-primary">Send Now</button>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -226,11 +267,21 @@ const Home = () => {
                                     onChange={(e) => setBookingData({...bookingData, checkInDate: e.target.value})}
                                 />
                             </div>
-                            <button type="submit" className="btn-primary py-4 mt-2">Submit Request</button>
+                            <div className="flex flex-col gap-3">
+                                <button type="submit" className="btn-primary py-4">Submit Request</button>
+                                <button type="button" onClick={handleWhatsAppSubmit} className="btn-whatsapp py-4 justify-center">
+                                    <MessageCircle size={20} /> Submit via WhatsApp
+                                </button>
+                            </div>
                         </form>
                     </motion.div>
                 </div>
             )}
+
+            {/* Floating WhatsApp Button */}
+            <a href="https://wa.me/917300048228" target="_blank" rel="noopener noreferrer" className="whatsapp-float">
+                <MessageCircle size={35} />
+            </a>
 
             <Footer />
         </>
