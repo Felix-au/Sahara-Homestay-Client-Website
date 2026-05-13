@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/logo.png" width="120" alt="Sahara Homestay Logo"/>
+</p>
+
 # Sahara Homestay — Client (Frontend)
 
 This is the React-based frontend for the Sahara Homestay platform, built with Vite and Tailwind CSS.

@@ -1,4 +1,5 @@
 <p align="center">
+  <img src="client/public/logo.png" width="150" alt="Sahara Homestay Logo"/>
 </p>
 <h1 align="center">Sahara Homestay: Premium Living Reimagined</h1>
 <p align="center">

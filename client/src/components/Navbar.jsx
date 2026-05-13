@@ -27,10 +27,8 @@ const Navbar = () => {
     return (
         <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled ? 'bg-white shadow-md py-3' : 'bg-white/80 backdrop-blur-md shadow-sm py-5'}`}>
             <div className="container flex justify-between items-center">
-                <Link to="/" className="flex items-center gap-2">
-                    <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center text-white">
-                        <Home size={24} />
-                    </div>
+                <Link to="/" className="flex items-center gap-3">
+                    <img src="/logo.png" alt="Sahara Logo" className="h-10 w-auto rounded-lg" />
                     <span className="text-xl font-bold font-playfair text-secondary">Sahara Homestay</span>
                 </Link>
 

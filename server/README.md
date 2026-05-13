@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="../client/public/logo.png" width="120" alt="Sahara Homestay Logo"/>
+</p>
+
 # Sahara Homestay — Server (Backend)
 
 This is the Node.js/Express backend for the Sahara Homestay platform, using MongoDB for data persistence and JWT for authentication.

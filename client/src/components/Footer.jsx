@@ -7,10 +7,8 @@ const Footer = () => {
             <div className="container">
                 <div className="grid md:grid-cols-4 gap-12 mb-12">
                     <div className="col-span-1">
-                        <div className="flex items-center gap-2 mb-6">
-                            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                                <Home size={24} />
-                            </div>
+                        <div className="flex items-center gap-3 mb-6">
+                            <img src="/logo.png" alt="Sahara Logo" className="h-10 w-auto rounded-lg" />
                             <span className="text-2xl font-bold font-playfair">Sahara</span>
                         </div>
                         <p className="text-gray-400 mb-6">
