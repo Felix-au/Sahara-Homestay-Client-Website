@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const Hero = ({ content, testimonials }) => {
     return (
-        <section id="home" className="pt-32 pb-16 bg-white">
+        <section id="home" className="pt-40 pb-16 bg-white">
             <div className="container">
                 {/* Header Text - Centered at Top */}
                 <div className="text-center max-w-3xl mx-auto mb-16">
