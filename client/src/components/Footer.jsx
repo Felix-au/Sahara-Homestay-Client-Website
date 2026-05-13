@@ -9,7 +9,7 @@ const Footer = () => {
                     <div className="col-span-1">
                         <div className="flex items-center gap-3 mb-6">
                             <img src="/logo.png" alt="Sahara Logo" className="h-10 w-auto rounded-lg" />
-                            <span className="text-2xl font-bold font-playfair">Sahara</span>
+                            <span className="text-2xl font-bold font-playfair">Sahara Homestay</span>
                         </div>
                         <p className="text-gray-400 mb-6">
                             Premium homestay living in the heart of Dharuhera. Quality rooms, modern amenities, and a peaceful environment.
