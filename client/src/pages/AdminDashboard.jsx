@@ -33,6 +33,7 @@ const AdminDashboard = () => {
     const [uploading, setUploading] = useState(false);
     const [credentials, setCredentials] = useState({ username: '', password: '' });
     const [credentialMsg, setCredentialMsg] = useState({ type: '', text: '' });
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -154,9 +155,20 @@ const AdminDashboard = () => {
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
 
     return (
-        <div className="flex h-screen bg-bg-light">
+        <div className="flex h-screen bg-bg-light relative overflow-hidden">
+            {/* Sidebar Overlay (Mobile) */}
+            {isSidebarOpen && (
+                <div 
+                    className="md:hidden fixed inset-0 bg-black/50 z-40"
+                    onClick={() => setIsSidebarOpen(false)}
+                />
+            )}
+
             {/* Sidebar */}
-            <aside className="w-64 bg-secondary text-white p-6 flex flex-col">
+            <aside className={`
+                fixed md:static inset-y-0 left-0 w-64 bg-secondary text-white p-6 flex flex-col z-50 transition-transform duration-300
+                ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
+            `}>
                 <div className="flex items-center gap-3 mb-12">
                     <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
                     <span className="text-xl font-bold font-playfair">Admin Console</span>
@@ -164,35 +176,35 @@ const AdminDashboard = () => {
 
                 <nav className="flex flex-col gap-2 flex-grow">
                     <button 
-                        onClick={() => setActiveTab('content')}
+                        onClick={() => { setActiveTab('content'); setIsSidebarOpen(false); }}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'content' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <LayoutDashboard size={20} />
                         Site Content
                     </button>
                     <button 
-                        onClick={() => setActiveTab('rooms')}
+                        onClick={() => { setActiveTab('rooms'); setIsSidebarOpen(false); }}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'rooms' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Bed size={20} />
                         Manage Rooms
                     </button>
                     <button 
-                        onClick={() => setActiveTab('bookings')}
+                        onClick={() => { setActiveTab('bookings'); setIsSidebarOpen(false); }}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'bookings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <MessageSquare size={20} />
                         Bookings
                     </button>
                     <button 
-                        onClick={() => setActiveTab('msgs')}
+                        onClick={() => { setActiveTab('msgs'); setIsSidebarOpen(false); }}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'msgs' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Mail size={20} />
                         Messages
                     </button>
                     <button 
-                        onClick={() => setActiveTab('settings')}
+                        onClick={() => { setActiveTab('settings'); setIsSidebarOpen(false); }}
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Settings size={20} />
@@ -210,10 +222,23 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-grow p-10 overflow-y-auto">
-                <header className="flex justify-between items-center mb-10">
-                    <h1 className="text-4xl font-playfair capitalize">{activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}</h1>
-                    <div className="flex items-center gap-4">
+            <main className="flex-grow p-4 md:p-10 overflow-y-auto w-full">
+                {/* Mobile Header Toggle */}
+                <div className="md:hidden flex items-center justify-between mb-6 bg-white p-4 -mx-4 -mt-4 shadow-sm">
+                    <div className="flex items-center gap-3">
+                        <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-secondary">
+                            <Menu size={24} />
+                        </button>
+                        <span className="font-bold font-playfair">Admin Console</span>
+                    </div>
+                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">A</div>
+                </div>
+
+                <header className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-10 gap-4">
+                    <h1 className="text-2xl md:text-4xl font-playfair capitalize">
+                        {activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}
+                    </h1>
+                    <div className="hidden md:flex items-center gap-4">
                         <span className="text-text-muted">Welcome, Admin</span>
                         <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">A</div>
                     </div>
@@ -415,15 +440,17 @@ const AdminDashboard = () => {
                         <div className="glass-card bg-white p-8 mb-6">
                             <h3 className="text-2xl font-playfair mb-6">Room Display Configuration</h3>
                             {content.find(c => c.section === 'rooms_config') && (
-                                <div className="flex items-center gap-4">
+                                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
                                     <label className="font-medium">Home Page Grid Columns:</label>
-                                    <input 
-                                        type="number" 
-                                        className="p-3 border rounded-xl w-24 outline-none focus:border-primary" 
-                                        defaultValue={content.find(c => c.section === 'rooms_config').data.columns}
-                                        onChange={e => updateContent('rooms_config', { columns: parseInt(e.target.value) })}
-                                    />
-                                    <span className="text-sm text-text-muted">(Auto-saved on change)</span>
+                                    <div className="flex items-center gap-4">
+                                        <input 
+                                            type="number" 
+                                            className="p-3 border rounded-xl w-24 outline-none focus:border-primary" 
+                                            defaultValue={content.find(c => c.section === 'rooms_config').data.columns}
+                                            onChange={e => updateContent('rooms_config', { columns: parseInt(e.target.value) })}
+                                        />
+                                        <span className="text-sm text-text-muted">(Auto-saved)</span>
+                                    </div>
                                 </div>
                             )}
                         </div>
@@ -465,8 +492,8 @@ const AdminDashboard = () => {
 
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
-                    <div className="glass-card bg-white overflow-hidden">
-                        <table className="w-full text-left">
+                    <div className="glass-card bg-white overflow-x-auto shadow-sm">
+                        <table className="w-full text-left min-w-[600px]">
                             <thead className="bg-bg-light border-b border-gray-100">
                                 <tr>
                                     <th className="p-4 font-semibold">Guest</th>
@@ -547,8 +574,8 @@ const AdminDashboard = () => {
 
                 {/* Admin Settings Tab */}
                 {activeTab === 'settings' && (
-                    <div className="max-w-2xl mx-auto">
-                        <div className="glass-card p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
+                    <div className="max-w-2xl mx-auto w-full">
+                        <div className="glass-card p-6 md:p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
                             <h2 className="text-3xl font-playfair mb-6 flex items-center gap-3">
                                 <Settings className="text-primary" /> 
                                 Update Admin Credentials
