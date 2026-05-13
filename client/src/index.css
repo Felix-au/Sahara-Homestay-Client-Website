@@ -146,8 +146,10 @@ section {
 .inset-0 { top: 0; left: 0; bottom: 0; right: 0; }
 .top-0 { top: 0; }
 .top-4 { top: 1rem; }
+.top-6 { top: 1.5rem; }
 .top-full { top: 100%; }
 .right-4 { right: 1rem; }
+.right-6 { right: 1.5rem; }
 .left-0 { left: 0; }
 .left-4 { left: 1rem; }
 .left-1\/2 { left: 50%; }
@@ -155,6 +157,7 @@ section {
 .z-0 { z-index: 0; }
 .z-10 { z-index: 10; }
 .z-50 { z-index: 50; }
+.z-\[100\] { z-index: 100; }
 .-translate-x-1\/2 { transform: translateX(-50%); }
 .-translate-y-1\/2 { transform: translateY(-50%); }
 .object-cover { object-fit: cover; }
@@ -202,11 +205,13 @@ section {
 .mb-8 { margin-bottom: 2rem; }
 .mb-10 { margin-bottom: 2.5rem; }
 .mb-12 { margin-bottom: 3rem; }
+.mt-2 { margin-top: 0.5rem; }
 .mt-4 { margin-top: 1rem; }
 .mt-8 { margin-top: 2rem; }
 .mt-auto { margin-top: auto; }
 .mx-auto { margin-left: auto; margin-right: auto; }
 .max-w-md { max-width: 28rem; }
+.max-w-lg { max-width: 32rem; }
 .max-w-2xl { max-width: 42rem; }
 .opacity-90 { opacity: 0.9; }
 .opacity-70 { opacity: 0.7; }
@@ -253,6 +258,7 @@ section {
 .border-gray-700 { border-color: #374151; }
 .border-gray-800 { border-color: #1f2937; }
 .border-white\/10 { border-color: rgba(255, 255, 255, 0.1); }
+.border-red-500\/50 { border-color: rgba(239, 68, 68, 0.5); }
 .border-t-transparent { border-top-color: transparent; }
 .border-white { border-color: white; }
 .bg-white { background-color: white; }
@@ -262,8 +268,11 @@ section {
 .bg-blue-100 { background-color: #dbeafe; }
 .bg-red-50 { background-color: #fef2f2; }
 .bg-red-100 { background-color: #fee2e2; }
+.bg-red-500\/10 { background-color: rgba(239, 68, 68, 0.1); }
 .bg-green-50 { background-color: #f0fdf4; }
 .bg-green-100 { background-color: #dcfce7; }
+.bg-green-500 { background-color: #22c55e; }
+.bg-gray-500 { background-color: #6b7280; }
 .bg-yellow-100 { background-color: #fef9c3; }
 .bg-transparent { background-color: transparent; }
 .bg-primary { background-color: var(--primary); }
@@ -272,7 +281,8 @@ section {
 .bg-accent\/10 { background-color: rgba(229, 199, 107, 0.1); }
 .bg-secondary { background-color: var(--secondary); }
 .bg-black\/50 { background-color: rgba(0, 0, 0, 0.5); }
-.bg-white\/5 { background-color: rgba(255, 255, 255, 0.05); }
+.bg-black\/80 { background-color: rgba(0, 0, 0, 0.8); }
+.backdrop-blur-sm { backdrop-filter: blur(4px); }
 .backdrop-blur-xl { backdrop-filter: blur(24px); }
 .backdrop-blur-\[2px\] { backdrop-filter: blur(2px); }
 .blur-3xl { filter: blur(64px); }
