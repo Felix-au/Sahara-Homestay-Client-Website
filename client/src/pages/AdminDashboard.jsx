@@ -219,12 +219,12 @@ const AdminDashboard = () => {
             <AdminNavbar activeTab={activeTab} setActiveTab={setActiveTab} handleLogout={handleLogout} />
 
             {/* Main Content */}
-            <main className="container pt-28 pb-10">
-                <header className="flex justify-between items-center mb-10">
-                    <h1 className="text-4xl font-playfair capitalize">{activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}</h1>
-                    <div className="flex items-center gap-4">
-                        <span className="text-text-muted">Welcome, Admin</span>
-                        <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">A</div>
+            <main className="container pt-20 pb-10 px-4 md:px-6">
+                <header className="flex justify-between items-center mb-6 md:mb-10">
+                    <h1 className="text-2xl md:text-4xl font-playfair capitalize">{activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}</h1>
+                    <div className="flex items-center gap-2 md:gap-4">
+                        <span className="hidden sm:block text-text-muted text-sm">Welcome, Admin</span>
+                        <div className="w-9 h-9 md:w-10 md:h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">A</div>
                     </div>
                 </header>
 
@@ -232,9 +232,9 @@ const AdminDashboard = () => {
                 {activeTab === 'content' && (
                     <div className="grid gap-8">
                         {content.filter(item => item.section !== 'rooms_config').map((item) => (
-                            <div key={item._id} className="glass-card p-8 bg-white">
+                            <div key={item._id} className="glass-card p-4 md:p-8 bg-white">
                                 <div className="flex justify-between items-center mb-6">
-                                    <h3 className="text-2xl font-playfair capitalize">{item.section.replace('_', ' ')} Section</h3>
+                                    <h3 className="text-xl md:text-2xl font-playfair capitalize">{item.section.replace('_', ' ')} Section</h3>
                                     {isEditingContent === item.section ? (
                                         <div className="flex gap-2">
                                             <button 
@@ -283,7 +283,7 @@ const AdminDashboard = () => {
                                                 <label>Columns:</label>
                                                 <input type="number" className="p-2 border rounded w-20" value={isEditingContent === 'gallery' ? editData.columns : item.data.columns} onChange={e => setEditData({...editData, columns: e.target.value})} disabled={isEditingContent !== 'gallery'} />
                                             </div>
-                                            <div className="grid grid-cols-4 gap-4">
+                                            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                                                 {(isEditingContent === 'gallery' ? editData.images : item.data.images).map((img, idx) => (
                                                     <div key={idx} className="relative group">
                                                         <img src={img} className="admin-gallery-image w-full h-auto" />
@@ -421,18 +421,18 @@ const AdminDashboard = () => {
                 {/* Rooms Management Tab */}
                 {activeTab === 'rooms' && (
                     <div className="grid gap-6">
-                        <div className="glass-card bg-white p-8 mb-6">
-                            <h3 className="text-2xl font-playfair mb-6">Room Display Configuration</h3>
+                        <div className="glass-card bg-white p-4 md:p-8 mb-6">
+                            <h3 className="text-xl md:text-2xl font-playfair mb-4 md:mb-6">Room Display Configuration</h3>
                             {content.find(c => c.section === 'rooms_config') && (
-                                <div className="flex items-center gap-4">
-                                    <label className="font-medium">Home Page Grid Columns:</label>
+                                <div className="flex flex-wrap items-center gap-3">
+                                    <label className="font-medium text-sm md:text-base">Home Page Grid Columns:</label>
                                     <input 
                                         type="number" 
-                                        className="p-3 border rounded-xl w-24 outline-none focus:border-primary" 
+                                        className="p-3 border rounded-xl w-20 outline-none focus:border-primary" 
                                         defaultValue={content.find(c => c.section === 'rooms_config').data.columns}
                                         onChange={e => updateContent('rooms_config', { columns: parseInt(e.target.value) })}
                                     />
-                                    <span className="text-sm text-text-muted">(Auto-saved on change)</span>
+                                    <span className="text-xs text-text-muted">(Auto-saved on change)</span>
                                 </div>
                             )}
                         </div>
@@ -482,7 +482,8 @@ const AdminDashboard = () => {
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
                     <div className="glass-card bg-white overflow-hidden">
-                        <table className="w-full text-left">
+                        <div className="overflow-x-auto">
+                        <table className="w-full text-left min-w-[600px]">
                             <thead className="bg-bg-light border-b border-gray-100">
                                 <tr>
                                     <th className="p-4 font-semibold">Guest</th>
@@ -518,6 +519,7 @@ const AdminDashboard = () => {
                                 ))}
                             </tbody>
                         </table>
+                        </div>
                     </div>
                 )}
 
@@ -532,7 +534,7 @@ const AdminDashboard = () => {
                         ) : (
                             <div className="grid gap-4">
                                 {messages.map((msg) => (
-                                    <div key={msg._id} className="glass-card bg-white p-6 flex flex-col md:flex-row justify-between items-start gap-4">
+                                    <div key={msg._id} className="glass-card bg-white p-4 md:p-6 flex flex-col md:flex-row justify-between items-start gap-4">
                                         <div className="flex-grow">
                                             <div className="flex items-center gap-3 mb-2">
                                                 <h4 className="text-xl font-bold">{msg.guestName}</h4>
@@ -564,8 +566,8 @@ const AdminDashboard = () => {
                 {/* Admin Settings Tab */}
                 {activeTab === 'settings' && (
                     <div className="max-w-2xl mx-auto">
-                        <div className="glass-card p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
-                            <h2 className="text-3xl font-playfair mb-6 flex items-center gap-3">
+                        <div className="glass-card p-4 md:p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
+                            <h2 className="text-2xl md:text-3xl font-playfair mb-4 md:mb-6 flex items-center gap-3">
                                 <Settings className="text-primary" /> 
                                 Update Admin Credentials
                             </h2>
@@ -628,15 +630,15 @@ const AdminDashboard = () => {
             {/* Room Add/Edit Modal */}
             {isRoomModalOpen && (
                 <div className="fixed inset-0 z-[100] overflow-y-auto p-6 bg-black/80 backdrop-blur-sm animate-fade-in">
-                    <div className="glass-card bg-white p-8 max-w-2xl w-full relative mx-auto my-auto">
+                    <div className="glass-card bg-white p-4 md:p-8 max-w-2xl w-full relative mx-auto my-auto">
                         <button 
                             onClick={() => setIsRoomModalOpen(false)}
-                            className="absolute top-6 right-6 text-gray-400 hover:text-secondary"
+                            className="absolute top-4 right-4 md:top-6 md:right-6 text-gray-400 hover:text-secondary"
                         >
                             <X size={24} />
                         </button>
 
-                        <h3 className="text-3xl font-playfair mb-8">{editingRoom ? 'Edit Room' : 'Add New Room'}</h3>
+                        <h3 className="text-2xl md:text-3xl font-playfair mb-6 md:mb-8">{editingRoom ? 'Edit Room' : 'Add New Room'}</h3>
 
                         <form onSubmit={handleSaveRoom} className="grid gap-6">
                             <div className="grid md:grid-cols-2 gap-6">
@@ -708,7 +710,7 @@ const AdminDashboard = () => {
 
                             <div className="grid gap-4">
                                 <label className="block text-sm font-semibold">Room Images</label>
-                                <div className="grid grid-cols-4 gap-4">
+                                <div className="grid grid-cols-3 sm:grid-cols-4 gap-3 md:gap-4">
                                     {roomFormData.images.map((img, idx) => (
                                         <div key={idx} className="relative group aspect-square rounded-xl overflow-hidden border">
                                             <img src={img} className="w-full h-full object-cover" />

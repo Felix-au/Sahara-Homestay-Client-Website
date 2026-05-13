@@ -25,9 +25,9 @@ const AdminNavbar = ({ activeTab, setActiveTab, handleLogout }) => {
     return (
         <nav className="fixed w-full z-50 transition-all duration-300 bg-white shadow-md py-3">
             <div className="container flex justify-between items-center">
-                <Link to="/admin/dashboard" className="flex items-center gap-3">
-                    <img src="/logo.png" alt="Sahara Logo" className="h-10 w-auto rounded-lg" />
-                    <span className="text-xl font-bold font-playfair text-secondary">Admin Console</span>
+                <Link to="/admin/dashboard" className="flex items-center gap-2 md:gap-3">
+                    <img src="/logo.png" alt="Sahara Logo" className="h-8 md:h-10 w-auto rounded-lg" />
+                    <span className="text-lg md:text-xl font-bold font-playfair text-secondary">Admin Console</span>
                 </Link>
 
                 {/* Desktop Menu */}
