@@ -4,7 +4,7 @@
 
 # Sahara Homestay — Client (Frontend)
 
-This is the React-based frontend for the Sahara Homestay platform, built with Vite and Tailwind CSS.
+This is the React-based frontend for the Sahara Homestay platform, built with Vite and Tailwind CSS. It features a modern, mobile-responsive layout for both public users and administrators.
 
 ## 🚀 Quick Start
 
