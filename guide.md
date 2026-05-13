@@ -56,10 +56,12 @@ Access the admin panel at `/admin`.
 
 ### Managing Content:
 - **Hero Section:** Update headings and images instantly.
-- **Rooms:** Add new rooms, specify pricing for Cooler vs. AC, and set locations.
-- **Gallery:** Upload multiple images. These are hosted on ImgBB and saved to your DB.
-- **Testimonials:** Manage guest reviews. If a profile image is missing, a stylish initial badge is auto-generated.
-- **Messages:** View all inquiries sent via the Contact form.
+- **Rooms:** Add new rooms, specify pricing for Cooler vs. AC, and set sharing types (Single, Double, etc.).
+- **Gallery:** Upload multiple images and configure the home page grid column count.
+- **Bookings:** View all incoming booking requests. Confirm or Cancel bookings to keep your records updated.
+- **Testimonials:** Manage guest reviews with automatic initial badge generation.
+- **Messages:** View and delete inquiries sent via the Contact form.
+- **Settings:** Securely update your admin username and password.
 
 ## 📦 Deployment
 

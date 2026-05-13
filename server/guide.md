@@ -29,6 +29,7 @@ Follow these steps to set up and manage the Sahara Homestay backend.
 - `GET /api/rooms`: List all rooms.
 - `GET /api/content`: Get all site content.
 - `GET /api/content/:section`: Get content for a specific section.
+- `POST /api/bookings`: Create a new booking request.
 - `POST /api/messages`: Submit contact form message.
 - `POST /api/admin/login`: Authenticate admin.
 
@@ -36,8 +37,11 @@ Follow these steps to set up and manage the Sahara Homestay backend.
 - `POST /api/rooms`: Create a new room.
 - `PUT /api/rooms/:id`: Update room details.
 - `DELETE /api/rooms/:id`: Delete a room.
+- `GET /api/bookings`: Fetch all bookings.
+- `PUT /api/bookings/:id`: Update booking status.
 - `PUT /api/content/:id`: Update site content section.
 - `GET /api/messages`: View all guest messages.
+- `PUT /api/auth/update`: Update admin credentials.
 
 ## 🔒 Security
 The server uses JWT (JSON Web Tokens) to protect administrative routes. The `JWT_SECRET` in your `.env` is used to sign these tokens.

@@ -72,20 +72,30 @@ Generic schema used to store section-specific data (Hero, Gallery, Contact, etc.
 |---|---|---|---|
 | GET | `/api/rooms` | Fetch all rooms | Public |
 | GET | `/api/content` | Fetch all CMS content | Public |
+| POST | `/api/bookings` | Create a new booking request | Public |
 | POST | `/api/messages` | Submit a contact form | Public |
-| POST | `/api/admin/login`| Admin authentication | Public |
+| POST | `/api/auth/login`| Admin authentication | Public |
+| GET | `/api/bookings` | Fetch all bookings | Private |
+| PUT | `/api/bookings/:id`| Update booking status | Private |
 | PUT | `/api/rooms/:id` | Update a room | Private |
 | PUT | `/api/content/:id`| Update CMS section | Private |
+| PUT | `/api/auth/update` | Update admin credentials | Private |
 
 ---
 
 ## Admin Features & Logic
 
-### Dynamic Column Configuration
-The admin can specify how many columns should be displayed in the **Rooms** and **Gallery** sections on the home page. This is stored in the `rooms_config` and `gallery` content objects and applied via inline CSS `gridTemplateColumns`.
+### Mobile-Responsive Dashboard
+The admin console is built with a mobile-first approach, featuring a collapsible sidebar (AdminNavbar) and card-based layouts for tables on smaller screens (especially for Bookings and Messages).
 
-### Testimonial Management
-Admin can add/edit guest reviews. If an image is provided, it is displayed in a circular frame. If not, the system automatically renders a badge with the first letter of the guest's name using a primary-themed background.
+### Booking Management
+Admin can track all guest bookings. Each booking contains guest details, room preference, and check-in date. Admin can transition booking status between `Pending`, `Confirmed`, and `Cancelled`.
+
+### Dynamic Configuration
+The admin can specify how many columns should be displayed in the **Rooms** and **Gallery** sections on the home page. This is stored in the `rooms_config` and `gallery` content objects and applied via dynamic grid layout logic.
+
+### Credential Security
+The Settings tab allows administrators to update their login credentials. Passwords are securely hashed on the server using `bcryptjs` before storage in MongoDB.
 
 ---
 

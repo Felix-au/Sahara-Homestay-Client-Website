@@ -53,11 +53,14 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 ### 🛠️ Powerful Admin Dashboard
 | Feature | Description |
 |---|---|
+| **Mobile-First UI** | Fully responsive admin console for on-the-go management. |
 | **Live CMS** | Update Hero text, Subtitles, and Contact info on the fly. |
 | **Gallery Manager** | Drag-and-drop image uploads with automatic ImgBB integration. |
-| **Room Management** | Add/Edit rooms with dual pricing (Cooler vs. AC) and location support. |
+| **Room Management** | Add/Edit rooms with dual pricing (Cooler vs. AC), sharing types, and location support. |
+| **Booking System** | View and manage guest bookings with one-click Confirm/Cancel actions. |
+| **Admin Settings** | Securely update admin username and password from the dashboard. |
 | **Message Center** | Dedicated inbox for contact form submissions. |
-| **Global Config** | Change site-wide settings like room column counts from the UI. |
+| **Global Config** | Change site-wide settings like room/gallery column counts from the UI. |
 
 ---
 
