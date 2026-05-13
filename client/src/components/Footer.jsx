@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Home, Facebook, Instagram, Twitter, Mail, Phone, Menu, X, Share2, Camera, Send } from 'lucide-react';
+import { Home, Mail, Phone, Menu, X, Share2, Camera, Send } from 'lucide-react';
 
 const Footer = () => {
     return (

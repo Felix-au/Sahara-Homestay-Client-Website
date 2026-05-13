@@ -20,8 +20,9 @@ const RoomCard = ({ room, onBook }) => {
                 <div className="flex justify-between items-start mb-4">
                     <div>
                         <h3 className="text-2xl mb-1">{room.title}</h3>
-                        <p className="text-text-muted flex items-center gap-1">
-                            <Users size={16} /> {room.sharingType} Sharing
+                        <p className="text-primary font-semibold text-sm mb-1">{room.location}</p>
+                        <p className="text-text-muted flex items-center gap-1 text-xs">
+                            <Users size={14} /> {room.sharingType} Sharing
                         </p>
                     </div>
                 </div>

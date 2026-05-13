@@ -250,11 +250,12 @@ const AdminDashboard = () => {
                                                 {(isEditingContent === 'locations' ? editData.maps : item.data.maps).map((mapHtml, idx) => (
                                                     <div key={idx} className="flex gap-4 items-start">
                                                         <div className="flex-grow">
-                                                            <textarea className="w-full p-2 border rounded text-xs h-20" value={mapHtml} onChange={e => {
+                                                            <textarea className="w-full p-2 border rounded text-xs h-20 mb-2" value={mapHtml} onChange={e => {
                                                                 const newMaps = [...editData.maps];
                                                                 newMaps[idx] = e.target.value;
                                                                 setEditData({...editData, maps: newMaps});
                                                             }} disabled={isEditingContent !== 'locations'} />
+                                                            <div className="h-20 w-full overflow-hidden border rounded bg-gray-50 text-[8px]" dangerouslySetInnerHTML={{ __html: mapHtml.replace(/width="\d+"/, 'width="100%"').replace(/height="\d+"/, 'height="100%"') }}></div>
                                                         </div>
                                                         {isEditingContent === 'locations' && (
                                                             <button onClick={() => setEditData({...editData, maps: editData.maps.filter((_, i) => i !== idx)})} className="p-2 bg-red-100 text-red-500 rounded"><Trash2 size={16} /></button>

@@ -25,6 +25,7 @@ const seedData = async () => {
         await Room.create([
             {
                 title: 'Single Sharing Room',
+                location: 'Haryana',
                 priceCooler: 10000,
                 priceAC: 15000,
                 sharingType: 'Single',
@@ -34,6 +35,7 @@ const seedData = async () => {
             },
             {
                 title: 'Double Sharing Room',
+                location: 'Haryana',
                 priceCooler: 7000,
                 priceAC: 9000,
                 sharingType: 'Double',
@@ -43,6 +45,7 @@ const seedData = async () => {
             },
             {
                 title: 'Triple Sharing Room',
+                location: 'Haryana',
                 priceCooler: 5000,
                 priceAC: 7000,
                 sharingType: 'Triple',
@@ -52,6 +55,7 @@ const seedData = async () => {
             },
             {
                 title: 'Quadruple Sharing Room',
+                location: 'Haryana',
                 priceCooler: 4500,
                 priceAC: 0,
                 sharingType: 'Quadruple',

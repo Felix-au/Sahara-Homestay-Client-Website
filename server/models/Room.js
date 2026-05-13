@@ -4,6 +4,7 @@ const roomSchema = new mongoose.Schema({
     title: { type: String, required: true },
     priceCooler: { type: Number },
     priceAC: { type: Number },
+    location: { type: String, default: 'Haryana' },
     sharingType: { type: String, enum: ['Single', 'Double', 'Triple', 'Quadruple'], required: true },
     amenities: [{ type: String }],
     images: [{ type: String }],
