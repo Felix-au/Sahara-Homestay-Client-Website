@@ -2,7 +2,7 @@ const axios = require('axios');
 const FormData = require('form-data');
 
 const uploadToImgBB = async (fileBuffer) => {
-    const IMGBB_API_KEY = '1f60019d811eb740fcca7ed4b6502813';
+    const IMGBB_API_KEY = process.env.IMGBB_API_KEY;
     const form = new FormData();
     form.append('image', fileBuffer.toString('base64'));
 
