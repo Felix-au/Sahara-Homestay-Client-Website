@@ -97,7 +97,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                         <div className="underline"></div>
                     </div>
 
-                    <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${content.rooms_config?.columns || 3}, minmax(0, 1fr))` }}>
+                    <div className="responsive-dynamic-grid" style={{ '--cols': content.rooms_config?.columns || 3 }}>
                         {rooms.map((room) => (
                             <RoomCard key={room._id} room={room} onBook={() => handleBookingClick(room)} />
                         ))}
@@ -113,7 +113,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                             <h2>Gallery</h2>
                             <div className="underline"></div>
                         </div>
-                        <div className="gallery-grid" style={{ gridTemplateColumns: `repeat(${content.gallery.columns || 4}, minmax(0, 1fr))` }}>
+                        <div className="responsive-dynamic-grid" style={{ '--cols': content.gallery.columns || 4 }}>
                             {content.gallery.images.map((img, idx) => (
                                 <div key={idx} className="gallery-item">
                                     <img src={img} alt={`Gallery ${idx + 1}`} />
@@ -132,7 +132,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                             <h2>Places You Will Find Us</h2>
                             <div className="underline"></div>
                         </div>
-                        <div className="grid gap-8" style={{ gridTemplateColumns: `repeat(${content.locations.columns || 2}, minmax(0, 1fr))` }}>
+                        <div className="responsive-dynamic-grid" style={{ '--cols': content.locations.columns || 2 }}>
                             {content.locations.maps.map((mapHtml, idx) => (
                                 <div key={idx} className="h-[400px] rounded-3xl overflow-hidden shadow-xl border-4 border-white" dangerouslySetInnerHTML={{ __html: mapHtml }}>
                                 </div>
@@ -150,7 +150,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                         <div className="underline"></div>
                     </div>
 
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6 text-center">
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6 text-center">
                         {[
                             { name: 'Free Wi-Fi', icon: '📶' },
                             { name: 'Power Backup', icon: '⚡' },
@@ -183,7 +183,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                                     <h4 className="text-primary text-xl mb-2">Location</h4>
                                     <p className="text-text-muted">{content.contact?.address}</p>
                                 </div>
-                                <div className="grid grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                                     <div>
                                         <h4 className="text-primary text-xl mb-2">Phone</h4>
                                         <p className="text-text-muted">{content.contact?.phone}</p>
@@ -199,7 +199,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                                 </div>
                             </div>
                         </div>
-                        <div className="glass-card p-10 bg-white">
+                        <div className="glass-card p-6 md:p-10 bg-white">
                             <h3 className="text-2xl mb-6">Send Message</h3>
                             <form className="flex flex-col gap-4" onSubmit={handleMessageSubmit}>
                                 <input 
@@ -210,7 +210,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                                     value={messageData.guestName}
                                     onChange={e => setMessageData({...messageData, guestName: e.target.value})}
                                 />
-                                <div className="grid grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <input 
                                         type="tel" 
                                         placeholder="Phone" 
@@ -248,7 +248,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                     <motion.div 
                         initial={{ scale: 0.9, opacity: 0 }}
                         animate={{ scale: 1, opacity: 1 }}
-                        className="glass-card bg-white p-10 max-w-lg w-full relative"
+                        className="glass-card bg-white p-6 md:p-10 max-w-lg w-full relative overflow-y-auto max-h-[90vh]"
                     >
                         <button 
                             onClick={() => setIsBookingModalOpen(false)}

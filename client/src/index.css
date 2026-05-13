@@ -219,6 +219,18 @@ section {
   border-radius: 8px;
 }
 
+.responsive-dynamic-grid {
+  display: grid;
+  gap: 2rem;
+  grid-template-columns: 1fr; /* Mobile fallback */
+}
+
+@media (min-width: 768px) {
+  .responsive-dynamic-grid {
+    grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  }
+}
+
 /* Utilities */
 .flex { display: flex; }
 .flex-col { flex-direction: column; }
@@ -440,5 +452,21 @@ section {
   
   .section-title h2 {
     font-size: 2rem;
+  }
+
+  section {
+    padding: 3rem 0;
+  }
+
+  .pt-32 {
+    padding-top: 6rem;
+  }
+
+  .text-4xl {
+    font-size: 1.875rem;
+  }
+
+  .h-\[400px\] {
+    height: 300px;
   }
 }
