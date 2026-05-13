@@ -38,8 +38,8 @@ const AdminLogin = () => {
             <div className="absolute top-[-10%] right-[-10%] w-[40%] h-[60%] bg-primary/20 rounded-full blur-3xl"></div>
             <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[50%] bg-accent/10 rounded-full blur-3xl"></div>
 
-            <div className="container max-w-md relative z-10">
-                <div className="glass-card p-10 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
+            <div className="container px-4 sm:max-w-md relative z-10">
+                <div className="glass-card p-6 sm:p-10 bg-white/5 border-white/10 backdrop-blur-xl shadow-2xl">
                     <div className="text-center mb-8">
                         <div className="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center text-white mx-auto mb-4 shadow-lg">
                             <Lock size={32} />

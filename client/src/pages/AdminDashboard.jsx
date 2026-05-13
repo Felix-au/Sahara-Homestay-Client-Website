@@ -19,7 +19,7 @@ import {
     Quote,
     Upload,
     Mail,
-    Menu
+    Menu as MenuIcon
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -156,21 +156,32 @@ const AdminDashboard = () => {
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
 
     return (
-        <div className="flex h-screen bg-bg-light relative overflow-hidden">
-            {/* Sidebar Overlay (Mobile) */}
+        <div className="flex flex-col md:flex-row h-screen bg-bg-light overflow-hidden">
+            {/* Mobile Header */}
+            <div className="md:hidden bg-secondary text-white p-4 flex items-center justify-between z-[60]">
+                <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
+                    <span className="text-xl font-bold font-playfair">Admin</span>
+                </div>
+                <button onClick={() => setIsSidebarOpen(!isSidebarOpen)}>
+                    {isSidebarOpen ? <X size={28} /> : <MenuIcon size={28} />}
+                </button>
+            </div>
+
+            {/* Sidebar Overlay for Mobile */}
             {isSidebarOpen && (
                 <div 
-                    className="md:hidden fixed inset-0 bg-black/50 z-40"
+                    className="md:hidden fixed inset-0 bg-black/50 z-[50] backdrop-blur-sm"
                     onClick={() => setIsSidebarOpen(false)}
-                />
+                ></div>
             )}
 
             {/* Sidebar */}
             <aside className={`
-                fixed md:static inset-y-0 left-0 w-64 bg-secondary text-white p-6 flex flex-col z-50 transition-transform duration-300
+                fixed md:relative inset-y-0 left-0 z-[55] w-64 bg-secondary text-white p-6 flex flex-col transition-transform duration-300
                 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full md:translate-x-0'}
             `}>
-                <div className="flex items-center gap-3 mb-12">
+                <div className="hidden md:flex items-center gap-3 mb-12">
                     <div className="w-8 h-8 bg-primary rounded flex items-center justify-center text-white">S</div>
                     <span className="text-xl font-bold font-playfair">Admin Console</span>
                 </div>
@@ -209,13 +220,13 @@ const AdminDashboard = () => {
                         className={`flex items-center gap-3 p-3 rounded-xl transition-all ${activeTab === 'settings' ? 'bg-primary text-white' : 'text-gray-400 hover:bg-white/5'}`}
                     >
                         <Settings size={20} />
-                        Admin Settings
+                        Settings
                     </button>
                 </nav>
 
                 <button 
                     onClick={handleLogout}
-                    className="flex items-center gap-3 p-3 rounded-xl text-red-400 hover:bg-red-500/10 transition-all mt-auto"
+                    className="flex items-center gap-3 p-3 text-red-400 hover:bg-white/5 rounded-xl transition-all mt-auto"
                 >
                     <LogOut size={20} />
                     Logout
@@ -223,25 +234,19 @@ const AdminDashboard = () => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-grow p-4 md:p-10 overflow-y-auto w-full">
-                {/* Mobile Header Toggle */}
-                <div className="md:hidden flex items-center justify-between mb-6 bg-white p-4 -mx-4 -mt-4 shadow-sm">
-                    <div className="flex items-center gap-3">
-                        <button onClick={() => setIsSidebarOpen(true)} className="p-2 -ml-2 text-secondary">
-                            <Menu size={24} />
-                        </button>
-                        <span className="font-bold font-playfair">Admin Console</span>
-                    </div>
-                    <div className="w-8 h-8 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold text-sm">A</div>
-                </div>
-
-                <header className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 md:mb-10 gap-4">
-                    <h1 className="text-2xl md:text-4xl font-playfair capitalize">
+            <main className="flex-1 overflow-y-auto p-4 md:p-8">
+                <header className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-10">
+                    <h1 className="text-3xl md:text-4xl font-playfair capitalize">
                         {activeTab === 'msgs' ? 'Contact Messages' : activeTab.replace('-', ' ')}
                     </h1>
-                    <div className="hidden md:flex items-center gap-4">
-                        <span className="text-text-muted">Welcome, Admin</span>
-                        <div className="w-10 h-10 bg-primary/20 rounded-full flex items-center justify-center text-primary font-bold">A</div>
+                    <div className="flex items-center gap-4">
+                        <div className="text-right hidden sm:block">
+                            <p className="text-sm font-bold text-secondary">Administrator</p>
+                            <p className="text-xs text-text-muted">Sahara Homestay</p>
+                        </div>
+                        <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                            A
+                        </div>
                     </div>
                 </header>
 
@@ -441,17 +446,15 @@ const AdminDashboard = () => {
                         <div className="glass-card bg-white p-8 mb-6">
                             <h3 className="text-2xl font-playfair mb-6">Room Display Configuration</h3>
                             {content.find(c => c.section === 'rooms_config') && (
-                                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                                <div className="flex items-center gap-4">
                                     <label className="font-medium">Home Page Grid Columns:</label>
-                                    <div className="flex items-center gap-4">
-                                        <input 
-                                            type="number" 
-                                            className="p-3 border rounded-xl w-24 outline-none focus:border-primary" 
-                                            defaultValue={content.find(c => c.section === 'rooms_config').data.columns}
-                                            onChange={e => updateContent('rooms_config', { columns: parseInt(e.target.value) })}
-                                        />
-                                        <span className="text-sm text-text-muted">(Auto-saved)</span>
-                                    </div>
+                                    <input 
+                                        type="number" 
+                                        className="p-3 border rounded-xl w-24 outline-none focus:border-primary" 
+                                        defaultValue={content.find(c => c.section === 'rooms_config').data.columns}
+                                        onChange={e => updateContent('rooms_config', { columns: parseInt(e.target.value) })}
+                                    />
+                                    <span className="text-sm text-text-muted">(Auto-saved on change)</span>
                                 </div>
                             )}
                         </div>
@@ -493,8 +496,9 @@ const AdminDashboard = () => {
 
                 {/* Bookings Tab */}
                 {activeTab === 'bookings' && (
-                    <div className="glass-card bg-white overflow-x-auto shadow-sm">
-                        <table className="w-full text-left min-w-[600px]">
+                    <div className="glass-card bg-white overflow-hidden">
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-left min-w-[600px]">
                             <thead className="bg-bg-light border-b border-gray-100">
                                 <tr>
                                     <th className="p-4 font-semibold">Guest</th>
@@ -575,8 +579,8 @@ const AdminDashboard = () => {
 
                 {/* Admin Settings Tab */}
                 {activeTab === 'settings' && (
-                    <div className="max-w-2xl mx-auto w-full">
-                        <div className="glass-card p-6 md:p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
+                    <div className="max-w-2xl mx-auto">
+                        <div className="glass-card p-8 bg-white shadow-xl rounded-2xl border border-primary/10">
                             <h2 className="text-3xl font-playfair mb-6 flex items-center gap-3">
                                 <Settings className="text-primary" /> 
                                 Update Admin Credentials
