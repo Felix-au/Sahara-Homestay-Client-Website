@@ -66,6 +66,30 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 
 ## 🏗 Architecture
 
+```mermaid
+graph TD
+    subgraph FE["Frontend — React + Vite"]
+        RC["React Components\nPages · UI Elements"]
+        TW["Tailwind CSS · Framer Motion"]
+    end
+
+    subgraph BE["Backend — Node.js / Express"]
+        API["REST API Routes"]
+        Auth["JWT Authentication"]
+        Img["ImgBB Image Hosting API"]
+        API --- Auth
+        API --- Img
+    end
+
+    DB["MongoDB Atlas"]
+
+    FE <-->|REST API calls| BE
+    API --> DB
+```
+
+<details>
+<summary>ASCII fallback (click to expand)</summary>
+
 ```
 ┌─────────────────────────────────────────────────────────────────┐
 │                    Sahara Homestay Platform                     │
@@ -85,6 +109,8 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 │                       └──────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────────┘
 ```
+
+</details>
 
 ---
 
