@@ -323,28 +323,34 @@ Check-in Date: ${bookingData.checkInDate}`;
                 <MessageCircle size={35} />
             </a>
 
-            {/* Horizontal Rotating Clients Strip */}
-            {clients.length > 0 && (
-                <div className="clients-strip">
-                    <div className="clients-track">
-                        {[...clients, ...clients, ...clients].map((c, idx) => (
-                            <div key={idx} className="client-item">
-                                {c.logo && (
-                                    <img 
-                                        src={c.logo} 
-                                        alt={c.text || 'Client Logo'} 
-                                        className="client-logo"
-                                        onError={(e) => {
-                                            e.target.style.display = 'none'; // Suppress broken images if logo path is invalid
-                                        }}
-                                    />
-                                )}
-                                {c.text && <span className="client-text">{c.text}</span>}
+            {/* Sticky Bottom Clients Strip + Copyright */}
+            <div className="clients-strip">
+                {clients.length > 0 && (
+                    <div className="clients-track-row">
+                        <span className="clients-label">Our Clients</span>
+                        <div className="clients-track-container">
+                            <div className="clients-track">
+                                {[...clients, ...clients, ...clients].map((c, idx) => (
+                                    <div key={idx} className="client-item">
+                                        {c.logo && (
+                                            <img 
+                                                src={c.logo} 
+                                                alt={c.text || 'Client Logo'} 
+                                                className="client-logo"
+                                                onError={(e) => {
+                                                    e.target.style.display = 'none';
+                                                }}
+                                            />
+                                        )}
+                                        {c.text && <span className="client-text">{c.text}</span>}
+                                    </div>
+                                ))}
                             </div>
-                        ))}
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+                <span className="clients-copyright">© {new Date().getFullYear()} Sahara Homestay. All rights reserved.</span>
+            </div>
 
             <Footer />
         </>

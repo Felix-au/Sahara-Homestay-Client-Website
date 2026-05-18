@@ -493,15 +493,81 @@ section {
   }
 }
 
-/* Horizontal Clients Scroll Strip */
+/* Horizontal Clients Scroll Strip — sticky bottom on desktop */
 .clients-strip {
   background: var(--secondary);
   border-top: 2px solid var(--primary);
-  padding: 1.5rem 0;
+  padding: 0.6rem 1.5rem 0.5rem;
   overflow: hidden;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* Desktop: fixed to viewport bottom */
+@media (min-width: 768px) {
+  .clients-strip {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 45;
+  }
+
+  /* Push page content up so footer isn't hidden under the strip (~76px) */
+  body {
+    padding-bottom: 76px;
+  }
+
+  /* Lift WhatsApp float above the sticky strip */
+  .whatsapp-float {
+    bottom: 96px;
+  }
+}
+
+/* Copyright row inside the strip */
+.clients-copyright {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.03em;
+  text-align: center;
+  width: 100%;
+}
+
+/* Row that holds the label + scrolling track side by side */
+.clients-track-row {
+  width: 100%;
   display: flex;
   align-items: center;
+  gap: 1rem;
+  overflow: hidden;
+}
+
+/* "Our Clients" label on the left */
+.clients-label {
+  font-family: 'Playfair Display', serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding: 0.2rem 0.75rem;
+  border: 1px solid var(--primary);
+  border-radius: 999px;
+  opacity: 0.9;
+}
+
+/* Scrolling track wrapper — full width, clips overflow */
+.clients-track-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .clients-track {
@@ -526,10 +592,10 @@ section {
 }
 
 .client-logo {
-  height: 32px;
+  height: 28px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1); /* Makes the logo pristine white on dark background */
+  filter: brightness(0) invert(1);
   opacity: 0.8;
   transition: var(--transition);
 }
@@ -541,7 +607,7 @@ section {
 
 .client-text {
   font-family: 'Playfair Display', serif;
-  font-size: 1rem;
+  font-size: 0.9rem;
   letter-spacing: 0.05em;
   color: rgba(255, 255, 255, 0.9);
 }

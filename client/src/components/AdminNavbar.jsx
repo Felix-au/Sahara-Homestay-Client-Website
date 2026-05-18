@@ -8,7 +8,8 @@ import {
     MessageSquare, 
     Settings, 
     LogOut,
-    Mail
+    Mail,
+    Users
 } from 'lucide-react';
 
 const AdminNavbar = ({ activeTab, setActiveTab, handleLogout }) => {
@@ -19,6 +20,7 @@ const AdminNavbar = ({ activeTab, setActiveTab, handleLogout }) => {
         { id: 'rooms', label: 'Manage Rooms', icon: <Bed size={18} /> },
         { id: 'bookings', label: 'Bookings', icon: <MessageSquare size={18} /> },
         { id: 'msgs', label: 'Messages', icon: <Mail size={18} /> },
+        { id: 'clients', label: 'Clients', icon: <Users size={18} /> },
         { id: 'settings', label: 'Settings', icon: <Settings size={18} /> },
     ];
 

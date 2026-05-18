@@ -19,7 +19,8 @@ import {
     MapPin,
     Quote,
     Upload,
-    Mail
+    Mail,
+    Users
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -28,6 +29,7 @@ const AdminDashboard = () => {
     const [content, setContent] = useState([]);
     const [bookings, setBookings] = useState([]);
     const [messages, setMessages] = useState([]);
+    const [clients, setClients] = useState([]);
     const [loading, setLoading] = useState(true);
     const [isEditingContent, setIsEditingContent] = useState(null);
     const [editData, setEditData] = useState({});
@@ -45,6 +47,10 @@ const AdminDashboard = () => {
         amenities: '',
         images: []
     });
+    // Client form state
+    const [clientForm, setClientForm] = useState({ text: '', logo: '' });
+    const [editingClientId, setEditingClientId] = useState(null);
+    const [clientMsg, setClientMsg] = useState('');
     const navigate = useNavigate();
 
     const token = localStorage.getItem('adminToken');
@@ -60,20 +66,22 @@ const AdminDashboard = () => {
     const fetchData = async () => {
         try {
             const config = { headers: { Authorization: `Bearer ${token}` } };
-            const [roomsRes, contentRes, bookingsRes, messagesRes] = await Promise.all([
+            const [roomsRes, contentRes, bookingsRes, messagesRes, clientsRes] = await Promise.all([
                 axios.get(`${API_BASE_URL}/rooms`),
                 axios.get(`${API_BASE_URL}/content`),
                 axios.get(`${API_BASE_URL}/bookings`, config),
-                axios.get(`${API_BASE_URL}/messages`, config)
+                axios.get(`${API_BASE_URL}/messages`, config),
+                axios.get(`${API_BASE_URL}/clients`)
             ]);
             setRooms(roomsRes.data);
             setContent(contentRes.data);
             setBookings(bookingsRes.data);
             setMessages(messagesRes.data);
+            setClients(clientsRes.data);
             setLoading(false);
         } catch (error) {
             console.error("Error fetching data:", error);
-            setLoading(false); // Stop loading even if some data failed
+            setLoading(false);
             if (error.response?.status === 401) {
                 localStorage.removeItem('adminToken');
                 navigate('/admin');
@@ -220,6 +228,52 @@ const AdminDashboard = () => {
             images: room.images
         });
         setIsRoomModalOpen(true);
+    };
+
+    // --- Client CRUD handlers ---
+    const handleClientSubmit = async (e) => {
+        e.preventDefault();
+        if (!clientForm.text && !clientForm.logo) {
+            setClientMsg('Please provide at least a name or a logo.');
+            return;
+        }
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            if (editingClientId) {
+                await axios.put(`${API_BASE_URL}/clients/${editingClientId}`, clientForm, config);
+            } else {
+                await axios.post(`${API_BASE_URL}/clients`, clientForm, config);
+            }
+            setClientForm({ text: '', logo: '' });
+            setEditingClientId(null);
+            setClientMsg('');
+            fetchData();
+        } catch (error) {
+            setClientMsg(error.response?.data?.message || 'Error saving client.');
+        }
+    };
+
+    const handleDeleteClient = async (id) => {
+        if (!window.confirm('Remove this client from the strip?')) return;
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            await axios.delete(`${API_BASE_URL}/clients/${id}`, config);
+            fetchData();
+        } catch (error) {
+            alert('Error deleting client.');
+        }
+    };
+
+    const startEditClient = (client) => {
+        setEditingClientId(client._id);
+        setClientForm({ text: client.text || '', logo: client.logo || '' });
+        setClientMsg('');
+    };
+
+    const cancelEditClient = () => {
+        setEditingClientId(null);
+        setClientForm({ text: '', logo: '' });
+        setClientMsg('');
     };
 
     if (loading) return <div className="h-screen flex items-center justify-center">Loading Dashboard...</div>;
@@ -625,6 +679,115 @@ const AdminDashboard = () => {
                                 ))}
                             </div>
                         )}
+                    </div>
+                )}
+
+                {/* Clients Tab */}
+                {activeTab === 'clients' && (
+                    <div className="grid gap-8">
+                        {/* Add / Edit Form */}
+                        <div className="glass-card bg-white p-4 md:p-8">
+                            <h3 className="text-xl md:text-2xl font-playfair mb-6 flex items-center gap-3">
+                                <Users className="text-primary" size={24} />
+                                {editingClientId ? 'Edit Client' : 'Add New Client'}
+                            </h3>
+                            <form onSubmit={handleClientSubmit} className="grid gap-5">
+                                {clientMsg && (
+                                    <p className="text-sm text-red-500 bg-red-50 p-3 rounded-xl">{clientMsg}</p>
+                                )}
+                                <div className="grid md:grid-cols-2 gap-5">
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2">Company / Client Name <span className="font-normal text-text-muted">(optional)</span></label>
+                                        <input
+                                            type="text"
+                                            className="w-full p-3 border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                            placeholder="e.g. Sahara Luxury Travel"
+                                            value={clientForm.text}
+                                            onChange={e => setClientForm({ ...clientForm, text: e.target.value })}
+                                        />
+                                    </div>
+                                    <div>
+                                        <label className="block text-sm font-semibold mb-2">Logo URL <span className="font-normal text-text-muted">(optional)</span></label>
+                                        <div className="flex gap-2">
+                                            <input
+                                                type="text"
+                                                className="flex-1 p-3 border border-gray-200 rounded-xl outline-none focus:border-primary"
+                                                placeholder="https://... or upload below"
+                                                value={clientForm.logo}
+                                                onChange={e => setClientForm({ ...clientForm, logo: e.target.value })}
+                                            />
+                                            <label className="flex items-center gap-1 px-3 py-2 bg-primary/10 text-primary rounded-xl cursor-pointer hover:bg-primary/20 transition-all text-sm font-medium whitespace-nowrap">
+                                                <Upload size={16} /> Upload
+                                                <input type="file" className="hidden" onChange={e => handleImageUpload(e, url => setClientForm({ ...clientForm, logo: url }))} />
+                                            </label>
+                                        </div>
+                                        {clientForm.logo && (
+                                            <div className="mt-2 flex items-center gap-2">
+                                                <img src={clientForm.logo} alt="preview" className="h-8 w-auto rounded border" onError={e => e.target.style.display='none'} />
+                                                <span className="text-xs text-text-muted">Preview</span>
+                                            </div>
+                                        )}
+                                    </div>
+                                </div>
+                                <div className="flex gap-3">
+                                    <button type="submit" className="btn-primary flex items-center gap-2">
+                                        {editingClientId ? <><Save size={18} /> Update Client</> : <><Plus size={18} /> Add to Strip</>}
+                                    </button>
+                                    {editingClientId && (
+                                        <button type="button" onClick={cancelEditClient} className="px-4 py-2 rounded-full border border-gray-200 text-text-muted hover:bg-bg-light text-sm font-medium">
+                                            Cancel
+                                        </button>
+                                    )}
+                                </div>
+                            </form>
+                        </div>
+
+                        {/* Client List */}
+                        <div className="glass-card bg-white overflow-hidden">
+                            <div className="p-4 md:p-6 border-b border-gray-100 flex justify-between items-center">
+                                <h3 className="text-lg font-playfair">Current Clients Strip ({clients.length})</h3>
+                                <span className="text-xs text-text-muted">Displayed as a scrolling strip on the homepage</span>
+                            </div>
+                            {clients.length === 0 ? (
+                                <div className="text-center p-16">
+                                    <Users size={40} className="mx-auto text-gray-300 mb-3" />
+                                    <p className="text-text-muted">No clients added yet.</p>
+                                </div>
+                            ) : (
+                                <div className="divide-y divide-gray-50">
+                                    {clients.map((client) => (
+                                        <div key={client._id} className="flex items-center gap-4 p-4 md:p-5 hover:bg-bg-light/50 transition-colors">
+                                            {/* Logo preview */}
+                                            <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
+                                                {client.logo ? (
+                                                    <img src={client.logo} alt={client.text || 'Logo'} className="h-7 w-auto object-contain" style={{ filter: 'brightness(0) invert(1)' }} onError={e => e.target.style.display='none'} />
+                                                ) : (
+                                                    <ImageIcon size={20} className="text-gray-400" />
+                                                )}
+                                            </div>
+                                            {/* Info */}
+                                            <div className="flex-1 min-w-0">
+                                                <p className="font-semibold text-secondary truncate">{client.text || <span className="text-text-muted italic">No name</span>}</p>
+                                                {client.logo && <p className="text-xs text-text-muted truncate">{client.logo}</p>}
+                                            </div>
+                                            {/* Actions */}
+                                            <div className="flex gap-2 flex-shrink-0">
+                                                <button
+                                                    onClick={() => startEditClient(client)}
+                                                    className="p-2 text-primary hover:bg-primary/10 rounded-lg transition-all"
+                                                    title="Edit"
+                                                ><Edit size={18} /></button>
+                                                <button
+                                                    onClick={() => handleDeleteClient(client._id)}
+                                                    className="p-2 text-red-500 hover:bg-red-500/10 rounded-lg transition-all"
+                                                    title="Delete"
+                                                ><Trash2 size={18} /></button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
                     </div>
                 )}
 
