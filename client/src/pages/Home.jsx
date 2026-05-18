@@ -326,8 +326,8 @@ Check-in Date: ${bookingData.checkInDate}`;
             {/* Sticky Bottom Clients Strip + Copyright */}
             <div className="clients-strip">
                 {clients.length > 0 && (
-                    <div className="clients-track-row">
-                        <span className="clients-label">Our Clients</span>
+                    <>
+                        <span className="clients-header-label">Our Clients</span>
                         <div className="clients-track-container">
                             <div className="clients-track">
                                 {[...clients, ...clients, ...clients].map((c, idx) => (
@@ -347,7 +347,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                                 ))}
                             </div>
                         </div>
-                    </div>
+                    </>
                 )}
                 <span className="clients-copyright">© {new Date().getFullYear()} Sahara Homestay. All rights reserved.</span>
             </div>

@@ -538,29 +538,17 @@ section {
   width: 100%;
 }
 
-/* Row that holds the label + scrolling track side by side */
-.clients-track-row {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  overflow: hidden;
-}
-
-/* "Our Clients" label on the left */
-.clients-label {
+/* "Our Clients" header text at the top of the strip */
+.clients-header-label {
   font-family: 'Playfair Display', serif;
-  font-size: 0.78rem;
+  font-size: 0.7rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--primary);
-  white-space: nowrap;
-  flex-shrink: 0;
-  padding: 0.2rem 0.75rem;
-  border: 1px solid var(--primary);
-  border-radius: 999px;
   opacity: 0.9;
+  text-align: center;
+  width: 100%;
 }
 
 /* Scrolling track wrapper — full width, clips overflow */
