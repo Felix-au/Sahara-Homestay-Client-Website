@@ -493,7 +493,7 @@ section {
   }
 }
 
-/* Horizontal Clients Scroll Strip — sticky bottom on desktop */
+/* Horizontal Clients Scroll Strip — sticky bottom globally */
 .clients-strip {
   background: var(--secondary);
   border-top: 2px solid var(--primary);
@@ -503,27 +503,21 @@ section {
   flex-direction: column;
   align-items: center;
   gap: 0.4rem;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 45;
 }
 
-/* Desktop: fixed to viewport bottom */
-@media (min-width: 768px) {
-  .clients-strip {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 45;
-  }
+/* Push page content up so footer isn't hidden under the strip */
+body {
+  padding-bottom: 76px;
+}
 
-  /* Push page content up so footer isn't hidden under the strip (~76px) */
-  body {
-    padding-bottom: 76px;
-  }
-
-  /* Lift WhatsApp float above the sticky strip */
-  .whatsapp-float {
-    bottom: 96px;
-  }
+/* Lift WhatsApp float above the sticky strip */
+.whatsapp-float {
+  bottom: 96px;
 }
 
 /* Copyright row inside the strip */
