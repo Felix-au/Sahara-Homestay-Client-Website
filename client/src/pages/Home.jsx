@@ -11,6 +11,7 @@ import { X, MessageCircle } from 'lucide-react';
 const Home = () => {
     const [rooms, setRooms] = useState([]);
     const [content, setContent] = useState({});
+    const [clients, setClients] = useState([]);
     const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
     const [selectedRoom, setSelectedRoom] = useState(null);
     const [bookingData, setBookingData] = useState({ guestName: '', email: '', phone: '', checkInDate: '' });
@@ -24,7 +25,10 @@ const Home = () => {
             try {
                 const roomsRes = await axios.get(`${API_BASE_URL}/rooms`);
                 const contentRes = await axios.get(`${API_BASE_URL}/content`);
+                const clientsRes = await axios.get(`${API_BASE_URL}/clients`);
+                
                 setRooms(roomsRes.data);
+                setClients(clientsRes.data);
                 
                 const contentObj = {};
                 contentRes.data.forEach(item => {
@@ -318,6 +322,29 @@ Check-in Date: ${bookingData.checkInDate}`;
             <a href={`https://wa.me/${content.contact?.phone?.replace(/\s+/g, '').replace(/[+-]/g, '') || '917300048228'}`} target="_blank" rel="noopener noreferrer" className="whatsapp-float">
                 <MessageCircle size={35} />
             </a>
+
+            {/* Horizontal Rotating Clients Strip */}
+            {clients.length > 0 && (
+                <div className="clients-strip">
+                    <div className="clients-track">
+                        {[...clients, ...clients, ...clients].map((c, idx) => (
+                            <div key={idx} className="client-item">
+                                {c.logo && (
+                                    <img 
+                                        src={c.logo} 
+                                        alt={c.text || 'Client Logo'} 
+                                        className="client-logo"
+                                        onError={(e) => {
+                                            e.target.style.display = 'none'; // Suppress broken images if logo path is invalid
+                                        }}
+                                    />
+                                )}
+                                {c.text && <span className="client-text">{c.text}</span>}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
 
             <Footer />
         </>

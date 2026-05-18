@@ -492,3 +492,66 @@ section {
     height: 300px;
   }
 }
+
+/* Horizontal Clients Scroll Strip */
+.clients-strip {
+  background: var(--secondary);
+  border-top: 2px solid var(--primary);
+  padding: 1.5rem 0;
+  overflow: hidden;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.clients-track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 4rem;
+  animation: scrollHorizontal 25s linear infinite;
+}
+
+.clients-track:hover {
+  animation-play-state: paused;
+}
+
+.client-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  color: white;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.client-logo {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* Makes the logo pristine white on dark background */
+  opacity: 0.8;
+  transition: var(--transition);
+}
+
+.client-item:hover .client-logo {
+  opacity: 1;
+  transform: scale(1.05);
+}
+
+.client-text {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+@keyframes scrollHorizontal {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
