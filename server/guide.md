@@ -29,6 +29,7 @@ Follow these steps to set up and manage the Sahara Homestay backend.
 - `GET /api/rooms`: List all rooms.
 - `GET /api/content`: Get all site content.
 - `GET /api/content/:section`: Get content for a specific section.
+- `GET /api/clients`: Fetch all clients/partners for scrolling strip.
 - `POST /api/bookings`: Create a new booking request.
 - `POST /api/messages`: Submit contact form message.
 - `POST /api/admin/login`: Authenticate admin.
@@ -37,6 +38,9 @@ Follow these steps to set up and manage the Sahara Homestay backend.
 - `POST /api/rooms`: Create a new room.
 - `PUT /api/rooms/:id`: Update room details.
 - `DELETE /api/rooms/:id`: Delete a room.
+- `POST /api/clients`: Add a new client partner.
+- `PUT /api/clients/:id`: Update an existing client's info (logo and/or text).
+- `DELETE /api/clients/:id`: Remove a client from the strip.
 - `GET /api/bookings`: Fetch all bookings.
 - `PUT /api/bookings/:id`: Update booking status.
 - `PUT /api/content/:id`: Update site content section.

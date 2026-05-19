@@ -32,10 +32,11 @@ Displays room details, dual pricing (Cooler/AC), and a booking button. The grid 
 ### Admin Dashboard (`AdminDashboard.jsx`)
 A comprehensive management interface. 
 - **Responsive Navigation:** `AdminNavbar` includes a mobile hamburger menu for easy navigation on small screens.
-- **Tabs:** Site Content, Manage Rooms, Bookings, Messages, and Settings.
+- **Tabs:** Site Content, Manage Rooms, Bookings, Messages, Clients, and Settings.
 - **Booking Actions:** Confirm or cancel bookings directly from the UI.
-- **Image Uploads:** Integrates with ImgBB API for seamless image hosting.
-- **Security:** Settings tab for updating admin credentials.
+- **Client Management:** Manage the horizontal scrolling clients footer strip. Admins can add names and logos, upload logo files directly to ImgBB, and update/delete existing partner items.
+- **Image Uploads:** Integrates with ImgBB API for seamless room/gallery/logo image hosting.
+- **Security:** Settings tab for updating admin credentials securely.
 
 ## 📦 Deployment
 Run `npm run build` to generate the production bundle in the `dist` folder.

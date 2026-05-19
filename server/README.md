@@ -42,7 +42,7 @@ This is the Node.js/Express backend for the Sahara Homestay platform, using Mong
 - **Security:** bcryptjs (for password hashing - optional if using plain pass in env)
 
 ## 📁 Key Directories
-- `/models`: Mongoose schemas (Room, Content, Message, Booking, Admin).
-- `/routes`: Express route handlers.
+- `/models`: Mongoose schemas (Room, Content, Message, Booking, Admin, Client).
+- `/routes`: Express route handlers (rooms, content, messages, admin, clients).
 - `/config`: Database connection and seeder script.
 - `/utils`: Helper functions (e.g., image upload handlers).

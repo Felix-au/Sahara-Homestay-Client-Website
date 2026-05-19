@@ -60,6 +60,7 @@ Access the admin panel at `/admin`.
 - **Gallery:** Upload multiple images and configure the home page grid column count.
 - **Bookings:** View all incoming booking requests. Confirm or Cancel bookings to keep your records updated.
 - **Testimonials:** Manage guest reviews with automatic initial badge generation.
+- **Clients:** Fully manage the horizontal scrolling strip at the bottom of the home page. Add partner client names and upload logos (leveraging the ImgBB integration), and edit or remove existing clients instantly.
 - **Messages:** View and delete inquiries sent via the Contact form.
 - **Settings:** Securely update your admin username and password.
 
@@ -77,6 +78,7 @@ npm run build
 To serve the frontend from the Express server, configure the `server.js` to serve static files from the `client/dist` directory in production mode.
 
 ## ⚠️ Important Notes
-- **Image Uploads:** The platform uses ImgBB for free image hosting. Ensure your API key in `AdminDashboard.jsx` (or a server-side helper) is valid.
+- **Image Uploads:** The platform uses ImgBB for free image hosting. Ensure your API key in `AdminDashboard.jsx` (or a server-side helper) is valid. This applies to Room images, Gallery photos, and Client logos.
 - **WhatsApp Integration:** The booking flow generates a URL with a pre-filled message. Ensure the phone number in the Contact section is formatted correctly (e.g., `917300048228`).
 - **Responsive Design:** The site uses Tailwind CSS for a mobile-first responsive layout. Testing on various screen sizes is recommended.
+- **Clients Strip Sticky Layout:** The clients strip is positioned as a fixed bottom footer globally (across both desktop and mobile viewports). The layout automatically applies a bottom padding (`padding-bottom: 76px`) to the page body and elevates the floating WhatsApp button (`bottom: 96px`) to guarantee no interactive elements overlap or get covered.

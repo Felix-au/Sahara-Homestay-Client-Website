@@ -49,6 +49,7 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 | **Dynamic Rooms** | Admin-configurable grid layouts for room listings. |
 | **Testimonial Engine** | Rolling reviews with profile images and fallback initial badges. |
 | **WhatsApp Booking** | Instant lead generation via pre-filled WhatsApp messages. |
+| **Our Clients Strip** | Sticky bottom infinite scrolling partner strip presenting logos and company names seamlessly, integrated with global mobile responsiveness and copyright notice. |
 
 ### 🛠️ Powerful Admin Dashboard
 | Feature | Description |
@@ -58,6 +59,7 @@ The platform prioritizes visual excellence with a modern "Glassmorphism" aesthet
 | **Gallery Manager** | Drag-and-drop image uploads with automatic ImgBB integration. |
 | **Room Management** | Add/Edit rooms with dual pricing (Cooler vs. AC), sharing types, and location support. |
 | **Booking System** | View and manage guest bookings with one-click Confirm/Cancel actions. |
+| **Client Strip Manager** | Add, edit, and delete partner clients/logos. Supports direct file uploads with ImgBB integration. |
 | **Admin Settings** | Securely update admin username and password from the dashboard. |
 | **Message Center** | Dedicated inbox for contact form submissions. |
 | **Global Config** | Change site-wide settings like room/gallery column counts from the UI. |
@@ -155,18 +157,18 @@ npm run dev
 sahara/
 ├── client/              # React Frontend (Vite)
 │   ├── src/
-│   │   ├── components/  # Reusable UI components
-│   │   ├── pages/       # Page components (Home, Admin)
-│   │   └── index.css    # Global styles & animations
+│   │   ├── components/  # Reusable UI components (Footer, AdminNavbar, RoomCard)
+│   │   ├── pages/       # Page components (Home, AdminDashboard, AdminLogin)
+│   │   └── index.css    # Global styles, infinite scroll keyframes & sticky footer configurations
 │   └── public/          # Static assets
 ├── server/              # Node.js Backend
-│   ├── models/          # Mongoose Schemas
-│   ├── routes/          # API Endpoints
+│   ├── models/          # Mongoose Schemas (Room, Content, Message, Client)
+│   ├── routes/          # API Endpoints (rooms, content, messages, admin, clients)
 │   ├── config/          # DB connection & Seeder
-│   └── server.js        # Entry point
+│   └── server.js        # Server entry point registering routing middleware
 ├── README.md            # You are here
 ├── guide.md             # Detailed setup guide
-└── Sahara-Homestay.md   # Deep dive documentation
+└── Sahara-Homestay.md   # Deep dive technical documentation
 ```
 
 ---

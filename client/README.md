@@ -32,10 +32,10 @@ This is the React-based frontend for the Sahara Homestay platform, built with Vi
 - **HTTP Client:** Axios
 
 ## 📁 Key Directories
-- `/src/components`: UI building blocks (Navbar, Hero, RoomCard, Footer).
-- `/src/pages`: Main page views (Home, Admin Dashboard, Admin Login).
+- `/src/components`: UI building blocks (Navbar, Hero, RoomCard, Footer, AdminNavbar).
+- `/src/pages`: Main page views (Home, AdminDashboard, AdminLogin).
 - `/src/assets`: Static images and brand assets.
-- `/src/index.css`: Global styles, custom animations, and utility classes.
+- `/src/index.css`: Global styles, custom glassmorphism effects, client-strip scrolling keyframe animations, and sticky footer positioning rules.
 
 ## ⚙️ Configuration
 The frontend connects to the backend API at `http://localhost:5000/api` by default. You can change this in the `axios` calls within `Home.jsx` and `AdminDashboard.jsx`.
