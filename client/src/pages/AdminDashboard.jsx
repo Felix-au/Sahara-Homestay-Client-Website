@@ -20,7 +20,8 @@ import {
     Quote,
     Upload,
     Mail,
-    Users
+    Users,
+    Undo
 } from 'lucide-react';
 
 const AdminDashboard = () => {
@@ -52,6 +53,153 @@ const AdminDashboard = () => {
     const [editingClientId, setEditingClientId] = useState(null);
     const [clientMsg, setClientMsg] = useState('');
     const navigate = useNavigate();
+
+    // Logo Editor Modal State
+    const [isLogoEditorOpen, setIsLogoEditorOpen] = useState(false);
+    const [savedImageData, setSavedImageData] = useState(null);
+    const [history, setHistory] = useState([]);
+    const [selectionRect, setSelectionRect] = useState(null);
+    const [isDrawing, setIsDrawing] = useState(false);
+    const [startPos, setStartPos] = useState(null);
+    const [editorImage, setEditorImage] = useState(null);
+    const canvasRef = React.useRef(null);
+
+    useEffect(() => {
+        if (!isLogoEditorOpen || !clientForm.logo) return;
+        const img = new Image();
+        img.crossOrigin = "anonymous";
+        img.onload = () => {
+            setEditorImage(img);
+            const canvas = canvasRef.current;
+            if (canvas) {
+                canvas.width = img.naturalWidth || img.width;
+                canvas.height = img.naturalHeight || img.height;
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0);
+                const initialData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                setSavedImageData(initialData);
+                setHistory([initialData]);
+                setSelectionRect(null);
+            }
+        };
+        img.src = clientForm.logo;
+    }, [isLogoEditorOpen, clientForm.logo]);
+
+    const getCanvasCoords = (e) => {
+        const canvas = canvasRef.current;
+        if (!canvas) return { x: 0, y: 0 };
+        const rect = canvas.getBoundingClientRect();
+        const x = ((e.clientX - rect.left) / rect.width) * canvas.width;
+        const y = ((e.clientY - rect.top) / rect.height) * canvas.height;
+        return { x, y };
+    };
+
+    const handleCanvasMouseDown = (e) => {
+        const coords = getCanvasCoords(e);
+        setIsDrawing(true);
+        setStartPos(coords);
+        setSelectionRect({ x: coords.x, y: coords.y, width: 0, height: 0 });
+    };
+
+    const handleCanvasMouseMove = (e) => {
+        if (!isDrawing || !startPos) return;
+        const coords = getCanvasCoords(e);
+        const rect = {
+            x: Math.min(startPos.x, coords.x),
+            y: Math.min(startPos.y, coords.y),
+            width: coords.x - startPos.x,
+            height: coords.y - startPos.y
+        };
+        setSelectionRect(rect);
+        drawCanvas(rect);
+    };
+
+    const handleCanvasMouseUp = () => {
+        setIsDrawing(false);
+    };
+
+    const drawCanvas = (rect) => {
+        const canvas = canvasRef.current;
+        if (!canvas || !savedImageData) return;
+        const ctx = canvas.getContext('2d');
+        ctx.putImageData(savedImageData, 0, 0);
+        if (rect && rect.width !== 0 && rect.height !== 0) {
+            ctx.strokeStyle = '#c5a880';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([6, 4]);
+            ctx.strokeRect(rect.x, rect.y, rect.width, rect.height);
+            ctx.fillStyle = 'rgba(197, 168, 128, 0.15)';
+            ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+            ctx.setLineDash([]);
+        }
+    };
+
+    const applyWhiteMask = () => {
+        if (!canvasRef.current || !savedImageData || !selectionRect) return;
+        const canvas = canvasRef.current;
+        const ctx = canvas.getContext('2d');
+        const newImgData = ctx.createImageData(savedImageData.width, savedImageData.height);
+        newImgData.data.set(savedImageData.data);
+        const data = newImgData.data;
+        const { x, y, width, height } = selectionRect;
+        const xStart = Math.round(Math.min(x, x + width));
+        const xEnd = Math.round(Math.max(x, x + width));
+        const yStart = Math.round(Math.min(y, y + height));
+        const yEnd = Math.round(Math.max(y, y + height));
+        for (let row = 0; row < canvas.height; row++) {
+            for (let col = 0; col < canvas.width; col++) {
+                if (col >= xStart && col <= xEnd && row >= yStart && row <= yEnd) {
+                    const index = (row * canvas.width + col) * 4;
+                    const alpha = data[index + 3];
+                    if (alpha > 0) {
+                        data[index] = 255;
+                        data[index + 1] = 255;
+                        data[index + 2] = 255;
+                    }
+                }
+            }
+        }
+        ctx.putImageData(newImgData, 0, 0);
+        setSavedImageData(newImgData);
+        setHistory([...history, newImgData]);
+        setSelectionRect(null);
+    };
+
+    const handleCanvasUndo = () => {
+        if (history.length <= 1) return;
+        const newHistory = history.slice(0, -1);
+        const prevState = newHistory[newHistory.length - 1];
+        setHistory(newHistory);
+        setSavedImageData(prevState);
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.putImageData(prevState, 0, 0);
+        }
+        setSelectionRect(null);
+    };
+
+    const handleCanvasReset = () => {
+        if (history.length === 0) return;
+        const originalState = history[0];
+        setHistory([originalState]);
+        setSavedImageData(originalState);
+        const canvas = canvasRef.current;
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            ctx.putImageData(originalState, 0, 0);
+        }
+        setSelectionRect(null);
+    };
+
+    const handleSaveEditorChanges = () => {
+        const canvas = canvasRef.current;
+        if (!canvas) return;
+        const dataUrl = canvas.toDataURL('image/png');
+        setClientForm({ ...clientForm, logo: dataUrl });
+        setIsLogoEditorOpen(false);
+    };
 
     const token = localStorage.getItem('adminToken');
 
@@ -722,9 +870,16 @@ const AdminDashboard = () => {
                                             </label>
                                         </div>
                                         {clientForm.logo && (
-                                            <div className="mt-2 flex items-center gap-2">
-                                                <img src={clientForm.logo} alt="preview" className="h-8 w-auto rounded border" onError={e => e.target.style.display='none'} />
+                                            <div className="mt-2 flex items-center gap-3">
+                                                <img src={clientForm.logo} alt="preview" className="h-8 w-auto rounded border bg-secondary p-1" onError={e => e.target.style.display='none'} />
                                                 <span className="text-xs text-text-muted">Preview</span>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => setIsLogoEditorOpen(true)}
+                                                    className="px-3 py-1 bg-primary/10 text-primary text-xs font-semibold rounded-lg hover:bg-primary/20 transition-all flex items-center gap-1 cursor-pointer"
+                                                >
+                                                    <Edit size={12} /> Edit Logo Mask
+                                                </button>
                                             </div>
                                         )}
                                     </div>
@@ -981,8 +1136,90 @@ const AdminDashboard = () => {
                     </div>
                 </div>
             )}
+
+            {/* Logo Editor Modal */}
+            {isLogoEditorOpen && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-md p-4">
+                    <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] flex flex-col overflow-hidden border border-primary/20">
+                        {/* Header */}
+                        <div className="p-5 border-b border-gray-100 flex justify-between items-center bg-gradient-to-r from-bg-light to-white">
+                            <div>
+                                <h3 className="text-xl font-playfair font-bold text-secondary">Interactive Logo Mask Editor</h3>
+                                <p className="text-xs text-text-muted mt-1">
+                                    Click and drag a box over any region. Everything inside will be converted to pure white.
+                                </p>
+                            </div>
+                            <button
+                                onClick={() => setIsLogoEditorOpen(false)}
+                                className="p-2 text-text-muted hover:text-red-500 rounded-full hover:bg-red-50 transition-colors"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+
+                        {/* Workspace / Canvas Area */}
+                        <div className="flex-1 overflow-auto p-6 bg-gray-50 flex items-center justify-center min-h-[300px]">
+                            <div className="relative border-4 border-white shadow-lg rounded-xl overflow-hidden checkerboard-bg">
+                                <canvas
+                                    ref={canvasRef}
+                                    onMouseDown={handleCanvasMouseDown}
+                                    onMouseMove={handleCanvasMouseMove}
+                                    onMouseUp={handleCanvasMouseUp}
+                                    onMouseLeave={handleCanvasMouseUp}
+                                    className="max-w-full max-h-[55vh] object-contain cursor-crosshair block"
+                                />
+                            </div>
+                        </div>
+
+                        {/* Controls Panel */}
+                        <div className="p-5 border-t border-gray-100 bg-white flex flex-col sm:flex-row justify-between items-center gap-4">
+                            {/* Action Buttons */}
+                            <div className="flex flex-wrap gap-2 w-full sm:w-auto">
+                                <button
+                                    onClick={applyWhiteMask}
+                                    disabled={!selectionRect || selectionRect.width === 0 || selectionRect.height === 0}
+                                    className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-semibold hover:bg-primary-dark transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 shadow-sm"
+                                >
+                                    <Check size={16} /> Apply White Mask
+                                </button>
+                                <button
+                                    onClick={handleCanvasUndo}
+                                    disabled={history.length <= 1}
+                                    className="px-4 py-2 border border-gray-200 rounded-xl text-sm font-semibold text-secondary hover:bg-gray-50 transition-all disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2"
+                                >
+                                    <Undo size={16} /> Undo
+                                </button>
+                                <button
+                                    onClick={handleCanvasReset}
+                                    disabled={history.length <= 1}
+                                    className="px-4 py-2 text-red-500 hover:bg-red-50 rounded-xl text-sm font-semibold transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                                >
+                                    Reset Image
+                                </button>
+                            </div>
+
+                            {/* Navigation / Save */}
+                            <div className="flex gap-2 w-full sm:w-auto justify-end">
+                                <button
+                                    onClick={() => setIsLogoEditorOpen(false)}
+                                    className="px-5 py-2 border border-gray-200 rounded-xl text-sm font-semibold text-text-muted hover:bg-gray-50 transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleSaveEditorChanges}
+                                    className="px-5 py-2 bg-secondary text-white rounded-xl text-sm font-semibold hover:bg-secondary-dark transition-all shadow-md"
+                                >
+                                    Save & Close
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
 
 export default AdminDashboard;
+
