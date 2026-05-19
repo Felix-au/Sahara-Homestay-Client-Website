@@ -150,7 +150,30 @@ sahara/
 │   ├── routes/          # rooms.js, content.js, messages.js, admin.js, clients.js
 │   └── config/          # db.js, seeder.js
 ```
+## Deployment Configuration (Vercel)
+
+The application supports seamless deployment on Vercel (both as a unified monorepo or as separate projects) fully managed via modern, production-ready `vercel.json` configurations:
+
+### 1. Root Level (`/vercel.json` & `/package.json`)
+Coordinates the unified monorepo-style deployment:
+- **Build Orchestration**: The root `package.json` exposes a standard `"build": "npm run build --prefix client"` script. Vercel automatically detects this and builds the Vite frontend into `client/dist` without manual dashboard configurations.
+- **Serverless functions**: Uses the modern `"functions"` key to register `server/server.js` as an edge-ready serverless function using the latest `@vercel/node` runtime.
+- **Intelligent Rewrites**:
+  - Directs `/api/*` and `/uploads/*` requests to the `server/server.js` serverless function.
+  - Automatically isolates static files (using a file extension regex `/:path*\\.:ext`) and routes them directly to `/client/dist/...`.
+  - Forwards all remaining SPA client routes (like `/admin` or `/`) to `/client/dist/index.html` so that React Router can handle frontend routing dynamically.
+
+### 2. Standalone Frontend Level (`/client/vercel.json`)
+Manages standalone client-only deployments:
+- **SPA Fallback**: Implements standard zero-config URL rewrites `cleanUrls: true` and `trailingSlash: false`. Uses an elegant dot-exclusion regex `((?!.*\\.).*)` to automatically route all clean paths to `/index.html` while allowing static files to serve natively.
+
+### 3. Standalone Backend Level (`/server/vercel.json`)
+Manages standalone serverless Express backend-only deployments:
+- **Modern Schema**: Upgraded completely from legacy `builds` to use the standard `functions` block mapping `server.js` to `vercel-node@latest`.
+- **Edge Gateway CORS**: Configures Vercel Edge routing and gateway headers to automatically intercept all cross-origin requests, returning appropriate Access-Control preflight response headers directly from the edge network.
+
 
 ---
 
 *Sahara Homestay v1.0 — A Premium MERN Solution*
+

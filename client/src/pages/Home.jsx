@@ -21,6 +21,31 @@ const Home = () => {
     const [msgStatus, setMsgStatus] = useState('');
 
     useEffect(() => {
+        const alternateClients = (clientsList) => {
+            if (!clientsList || clientsList.length === 0) return [];
+            const whitePile = [];
+            const coloredPile = [];
+            clientsList.forEach(c => {
+                const isWhite = c.isWhiteOnly || !c.logo;
+                if (isWhite) {
+                    whitePile.push(c);
+                } else {
+                    coloredPile.push(c);
+                }
+            });
+            const result = [];
+            const maxLen = Math.max(whitePile.length, coloredPile.length);
+            for (let i = 0; i < maxLen; i++) {
+                if (i < whitePile.length) {
+                    result.push(whitePile[i]);
+                }
+                if (i < coloredPile.length) {
+                    result.push(coloredPile[i]);
+                }
+            }
+            return result;
+        };
+
         const fetchData = async () => {
             try {
                 const roomsRes = await axios.get(`${API_BASE_URL}/rooms`);
@@ -28,7 +53,7 @@ const Home = () => {
                 const clientsRes = await axios.get(`${API_BASE_URL}/clients`);
                 
                 setRooms(roomsRes.data);
-                setClients(clientsRes.data);
+                setClients(alternateClients(clientsRes.data));
                 
                 const contentObj = {};
                 contentRes.data.forEach(item => {
