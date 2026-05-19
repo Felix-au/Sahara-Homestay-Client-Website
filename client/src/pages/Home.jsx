@@ -336,7 +336,7 @@ Check-in Date: ${bookingData.checkInDate}`;
                                             <img 
                                                 src={c.logo} 
                                                 alt={c.text || 'Client Logo'} 
-                                                className="client-logo"
+                                                className={`client-logo ${c.isWhiteOnly ? 'white-only' : ''}`}
                                                 onError={(e) => {
                                                     e.target.style.display = 'none';
                                                 }}

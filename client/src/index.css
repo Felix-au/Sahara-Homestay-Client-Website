@@ -577,9 +577,12 @@ body {
   height: 28px;
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
   opacity: 0.8;
   transition: var(--transition);
+}
+
+.client-logo.white-only {
+  filter: brightness(0) invert(1);
 }
 
 .client-item:hover .client-logo {

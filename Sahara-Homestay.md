@@ -49,6 +49,7 @@
 {
   logo: String, // URL from ImgBB (optional)
   text: String, // Company/Client Name (optional)
+  isWhiteOnly: Boolean, // Converts logo to white-only overlay (default: false)
   // Pre-validation guarantees that at least one of logo or text is provided
 }
 ```
@@ -105,7 +106,7 @@ The admin console is built with a mobile-first approach, featuring a collapsible
 Admin can track all guest bookings. Each booking contains guest details, room preference, and check-in date. Admin can transition booking status between `Pending`, `Confirmed`, and `Cancelled`.
 
 ### Client Strip Management
-The Clients tab enables administrators to fully control the horizontal rolling strip shown at the bottom of the home page. Admins can add new company/client entries with text and logo, edit existing entries, and delete them. It leverages the ImgBB image uploading flow for partner logos.
+The Clients tab enables administrators to fully control the horizontal rolling strip shown at the bottom of the home page. Admins can add new company/client entries with text and logo, edit existing entries, and delete them. It leverages the ImgBB image uploading flow for partner logos. Admins can also toggle the "Convert Logo to White Only" option (off by default) to render a client logo as a pure white high-contrast overlay, or leave it off to display original brand colors.
 
 ### Dynamic Configuration
 The admin can specify how many columns should be displayed in the **Rooms** and **Gallery** sections on the home page. This is stored in the `rooms_config` and `gallery` content objects and applied via dynamic grid layout logic.

@@ -48,7 +48,7 @@ const AdminDashboard = () => {
         images: []
     });
     // Client form state
-    const [clientForm, setClientForm] = useState({ text: '', logo: '' });
+    const [clientForm, setClientForm] = useState({ text: '', logo: '', isWhiteOnly: false });
     const [editingClientId, setEditingClientId] = useState(null);
     const [clientMsg, setClientMsg] = useState('');
     const navigate = useNavigate();
@@ -244,7 +244,7 @@ const AdminDashboard = () => {
             } else {
                 await axios.post(`${API_BASE_URL}/clients`, clientForm, config);
             }
-            setClientForm({ text: '', logo: '' });
+            setClientForm({ text: '', logo: '', isWhiteOnly: false });
             setEditingClientId(null);
             setClientMsg('');
             fetchData();
@@ -266,13 +266,13 @@ const AdminDashboard = () => {
 
     const startEditClient = (client) => {
         setEditingClientId(client._id);
-        setClientForm({ text: client.text || '', logo: client.logo || '' });
+        setClientForm({ text: client.text || '', logo: client.logo || '', isWhiteOnly: client.isWhiteOnly || false });
         setClientMsg('');
     };
 
     const cancelEditClient = () => {
         setEditingClientId(null);
-        setClientForm({ text: '', logo: '' });
+        setClientForm({ text: '', logo: '', isWhiteOnly: false });
         setClientMsg('');
     };
 
@@ -729,6 +729,21 @@ const AdminDashboard = () => {
                                         )}
                                     </div>
                                 </div>
+                                <div className="flex items-center gap-3 bg-bg-light/40 p-3 rounded-xl border border-gray-100 max-w-md">
+                                    <input
+                                        type="checkbox"
+                                        id="isWhiteOnly"
+                                        className="h-5 w-5 text-primary focus:ring-primary border-gray-300 rounded-lg cursor-pointer"
+                                        checked={clientForm.isWhiteOnly || false}
+                                        onChange={e => setClientForm({ ...clientForm, isWhiteOnly: e.target.checked })}
+                                    />
+                                    <div>
+                                        <label htmlFor="isWhiteOnly" className="text-sm font-semibold cursor-pointer text-secondary select-none">
+                                            Convert Logo to White Only
+                                        </label>
+                                        <p className="text-xs text-text-muted">Turn on to superimpose client logo in pure white over dark themes</p>
+                                    </div>
+                                </div>
                                 <div className="flex gap-3">
                                     <button type="submit" className="btn-primary flex items-center gap-2">
                                         {editingClientId ? <><Save size={18} /> Update Client</> : <><Plus size={18} /> Add to Strip</>}
@@ -760,7 +775,7 @@ const AdminDashboard = () => {
                                             {/* Logo preview */}
                                             <div className="w-12 h-12 rounded-xl bg-secondary flex items-center justify-center flex-shrink-0 overflow-hidden">
                                                 {client.logo ? (
-                                                    <img src={client.logo} alt={client.text || 'Logo'} className="h-7 w-auto object-contain" style={{ filter: 'brightness(0) invert(1)' }} onError={e => e.target.style.display='none'} />
+                                                    <img src={client.logo} alt={client.text || 'Logo'} className="h-7 w-auto object-contain" style={client.isWhiteOnly ? { filter: 'brightness(0) invert(1)' } : {}} onError={e => e.target.style.display='none'} />
                                                 ) : (
                                                     <ImageIcon size={20} className="text-gray-400" />
                                                 )}

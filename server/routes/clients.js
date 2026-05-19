@@ -20,8 +20,8 @@ router.get('/', async (req, res) => {
 // @access  Private/Admin
 router.post('/', protect, async (req, res) => {
     try {
-        const { logo, text } = req.body;
-        const newClient = new Client({ logo, text });
+        const { logo, text, isWhiteOnly } = req.body;
+        const newClient = new Client({ logo, text, isWhiteOnly });
         const savedClient = await newClient.save();
         res.status(201).json(savedClient);
     } catch (error) {
@@ -34,11 +34,12 @@ router.post('/', protect, async (req, res) => {
 // @access  Private/Admin
 router.put('/:id', protect, async (req, res) => {
     try {
-        const { logo, text } = req.body;
+        const { logo, text, isWhiteOnly } = req.body;
         const client = await Client.findById(req.params.id);
         if (client) {
             client.logo = logo !== undefined ? logo : client.logo;
             client.text = text !== undefined ? text : client.text;
+            client.isWhiteOnly = isWhiteOnly !== undefined ? isWhiteOnly : client.isWhiteOnly;
             const updatedClient = await client.save();
             res.json(updatedClient);
         } else {
