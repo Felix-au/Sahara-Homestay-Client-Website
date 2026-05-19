@@ -118,9 +118,24 @@ const seedData = async () => {
                 section: 'testimonials',
                 data: {
                     items: [
-                        { name: 'Rahul Sharma', text: 'Best homestay in Dharuhera! Very clean and quiet.', image: '' },
-                        { name: 'Amit Kumar', text: 'Great facilities and friendly management. Highly recommended.', image: '' },
-                        { name: 'Suresh Singh', text: 'Affordable and near the market. Perfect for students.', image: '' }
+                        {
+                            id: 1,
+                            name: "Vidyansh Gupta",
+                            text: "I’ve had a great stay here—clean rooms, good food, reliable Wi-Fi, and helpful staff. Very safe and comfortable overall.",
+                            image: "/p1.jpeg",
+                        },
+                        {
+                            id: 2,
+                            name: "Gujjar",
+                            text: "This PG exceeded expectations—neat environment, responsive staff, strong security, and excellent facilities. Definitely recommend for a peaceful, easy stay.",
+                            image: "/p2.jpeg",
+                        },
+                        {
+                            id: 3,
+                            name: "Akshay",
+                            text: "Very satisfied with the amenities and support here. Daily meals are hygienic, and the location is convenient for everything.",
+                            image: "/p3.jpeg",
+                        }
                     ]
                 }
             }
