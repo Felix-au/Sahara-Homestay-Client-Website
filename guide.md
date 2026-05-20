@@ -25,6 +25,7 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=any_random_secret_string
 ADMIN_USER=admin
 ADMIN_PASS=admin123
+SERPAPI_API_KEY=your_serpapi_api_key
 ```
 
 **Seed the Database (First time only):**

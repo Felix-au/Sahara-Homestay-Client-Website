@@ -52,6 +52,7 @@ const AdminDashboard = () => {
     const [clientForm, setClientForm] = useState({ text: '', logo: '', isWhiteOnly: false });
     const [editingClientId, setEditingClientId] = useState(null);
     const [clientMsg, setClientMsg] = useState('');
+    const [syncingReviews, setSyncingReviews] = useState(false);
     const navigate = useNavigate();
 
     // Logo Editor Modal State
@@ -292,6 +293,20 @@ const AdminDashboard = () => {
             fetchData();
         } catch (error) {
             alert("Error updating content");
+        }
+    };
+
+    const handleSyncGoogleReviews = async () => {
+        setSyncingReviews(true);
+        try {
+            const config = { headers: { Authorization: `Bearer ${token}` } };
+            const { data } = await axios.post(`${API_BASE_URL}/content/sync-google-reviews`, {}, config);
+            setEditData(data.data);
+            alert("Google Reviews synced successfully! Click the Green Save button to apply changes.");
+        } catch (error) {
+            alert("Error syncing Google Reviews: " + (error.response?.data?.message || error.message));
+        } finally {
+            setSyncingReviews(false);
         }
     };
 
@@ -597,7 +612,12 @@ const AdminDashboard = () => {
                                                 </div>
                                             ))}
                                             {isEditingContent === 'testimonials' && (
-                                                <button onClick={() => setEditData({...editData, items: [...editData.items, { name: '', text: '', image: '' }]})} className="btn-primary self-start text-xs py-2 px-4">Add Testimonial</button>
+                                                <div className="flex flex-wrap gap-3">
+                                                    <button onClick={() => setEditData({...editData, items: [...editData.items, { name: '', text: '', image: '' }]})} className="btn-primary self-start text-xs py-2 px-4">Add Testimonial</button>
+                                                    <button onClick={handleSyncGoogleReviews} disabled={syncingReviews} className="btn-primary bg-orange-500 hover:bg-orange-600 self-start text-xs py-2 px-4 flex items-center gap-2">
+                                                        {syncingReviews ? 'Syncing...' : 'Import Google Reviews (via SerpApi)'}
+                                                    </button>
+                                                </div>
                                             )}
                                         </div>
                                     )}
