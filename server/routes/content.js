@@ -15,45 +15,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// @desc    Sync reviews from Google Maps via SerpApi (returns mapped reviews for preview)
-// @route   POST /api/content/sync-google-reviews
-// @access  Private/Admin
-router.post('/sync-google-reviews', protect, async (req, res) => {
-    const axios = require('axios');
-    const apiKey = process.env.SERPAPI_API_KEY;
-    if (!apiKey) {
-        return res.status(400).json({ message: 'SERPAPI_API_KEY is not configured in backend environment variables.' });
-    }
-
-    try {
-        const response = await axios.get('https://serpapi.com/search', {
-            params: {
-                engine: 'google_maps_reviews',
-                data_id: '0x390d499f2ace8cc1:0xd20fa6362d3613a1',
-                api_key: apiKey
-            }
-        });
-
-        const googleReviews = response.data.reviews || [];
-        
-        // Map SerpApi reviews to Sahara Homestay testimonial schema
-        const items = googleReviews.map((r, index) => ({
-            id: index + 1,
-            name: r.name,
-            text: r.snippet || r.text || '',
-            image: r.thumbnail || ''
-        }));
-
-        res.json({
-            section: 'testimonials',
-            data: { items }
-        });
-    } catch (error) {
-        res.status(500).json({ message: 'Failed to fetch reviews from SerpApi: ' + (error.response?.data?.error || error.message) });
-    }
-});
-
-
 // @desc    Update content
 // @route   PUT /api/content/:section
 // @access  Private/Admin

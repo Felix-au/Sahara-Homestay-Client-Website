@@ -21,7 +21,6 @@ This is the Node.js/Express backend for the Sahara Homestay platform, using Mong
    JWT_SECRET=your_secret
    ADMIN_USER=admin
    ADMIN_PASS=admin123
-   SERPAPI_API_KEY=your_serpapi_key
    ```
 
 3. **Seed Database:**

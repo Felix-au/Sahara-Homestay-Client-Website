@@ -46,8 +46,6 @@ Follow these steps to set up and manage the Sahara Homestay backend.
 - `PUT /api/content/:id`: Update site content section.
 - `GET /api/messages`: View all guest messages.
 - `PUT /api/auth/update`: Update admin credentials.
-- `POST /api/content/sync-google-reviews`: Fetch and format Google Reviews via SerpApi.
-
 
 ## 🔒 Security
 The server uses JWT (JSON Web Tokens) to protect administrative routes. The `JWT_SECRET` in your `.env` is used to sign these tokens.
