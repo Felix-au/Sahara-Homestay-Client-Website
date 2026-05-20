@@ -67,6 +67,11 @@ app.get('/health', (req, res) => {
     res.send('OK');
 });
 
+app.get('/api/health', (req, res) => {
+    res.send('ok');
+});
+
+
 // Basic route
 app.get('/', (req, res) => {
     res.send('Sahara Homestay API is running...');
