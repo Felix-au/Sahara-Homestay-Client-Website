@@ -38,4 +38,12 @@ This is the React-based frontend for the Sahara Homestay platform, built with Vi
 - `/src/index.css`: Global styles, custom glassmorphism effects, client-strip scrolling keyframe animations, and sticky footer positioning rules.
 
 ## ⚙️ Configuration
-The frontend connects to the backend API at `http://localhost:5000/api` by default. You can change this in the `axios` calls within `Home.jsx` and `AdminDashboard.jsx`.
+
+The frontend connects to the backend API using the `VITE_API_BASE_URL` environment variable.
+
+1. Create a `.env` file in the `client` directory (you can copy from `.env.example`):
+   ```env
+   VITE_API_BASE_URL=http://localhost:5000/api
+   ```
+2. The frontend loads this variable via Vite's `import.meta.env` mechanism in `src/config.js`.
+

@@ -17,9 +17,12 @@ Follow these steps to set up the Sahara Homestay frontend development environmen
    ```bash
    npm run dev
    ```
-
-3. **Environment (Local):**
-   The client expects the backend to be running on `http://localhost:5000`. Ensure your backend is started before using features like room listings or the admin panel.
+3. **Environment Configuration:**
+   Copy `.env.example` to `.env` in the `client` folder and configure the API address:
+   ```env
+   VITE_API_BASE_URL=http://localhost:5000/api
+   ```
+   Ensure your backend is running and that the URL matches your backend's API endpoint before using features like room listings or the admin panel.
 
 ## 🎨 UI Components
 

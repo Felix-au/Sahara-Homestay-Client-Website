@@ -131,6 +131,8 @@ cd ../client && npm install
 ```
 
 ### 2. Environment Setup
+
+**Backend Setup:**
 Create a `.env` file in the `/server` directory:
 ```env
 PORT=5000
@@ -140,7 +142,14 @@ ADMIN_USER=admin
 ADMIN_PASS=admin123
 ```
 
+**Frontend Setup:**
+Create a `.env` file in the `/client` directory:
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
 ### 3. Run Development
+
 ```bash
 # In /server
 npm start

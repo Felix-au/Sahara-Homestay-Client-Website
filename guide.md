@@ -41,10 +41,20 @@ npm start
 ```bash
 cd client
 npm install
+```
+
+Create a `.env` file in the `client` folder (copied from `.env.example`):
+```env
+VITE_API_BASE_URL=http://localhost:5000/api
+```
+
+Start the client dev server:
+```bash
 npm run dev
 ```
 
 The frontend will be available at `http://localhost:5173` (or similar, check Vite output).
+
 
 ## 🛠 Admin Dashboard
 
