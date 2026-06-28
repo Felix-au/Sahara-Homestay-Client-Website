@@ -19,7 +19,7 @@
       "destination": "/client/dist/:path*\\.:ext"
     },
     {
-      "source": "/((?!api|uploads).*)",
+      "source": "/(.*)",
       "destination": "/client/dist/index.html"
     }
   ]
