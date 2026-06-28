@@ -22,7 +22,7 @@ const Home = () => {
 
     useEffect(() => {
         const alternateClients = (clientsList) => {
-            if (!clientsList || clientsList.length === 0) return [];
+            if (!clientsList || !Array.isArray(clientsList) || clientsList.length === 0) return [];
             const whitePile = [];
             const coloredPile = [];
             clientsList.forEach(c => {
@@ -52,12 +52,18 @@ const Home = () => {
                 const contentRes = await axios.get(`${API_BASE_URL}/content`);
                 const clientsRes = await axios.get(`${API_BASE_URL}/clients`);
                 
-                setRooms(roomsRes.data);
-                setClients(alternateClients(clientsRes.data));
+                const roomsData = Array.isArray(roomsRes.data) ? roomsRes.data : [];
+                const clientsData = Array.isArray(clientsRes.data) ? clientsRes.data : [];
+                const contentData = Array.isArray(contentRes.data) ? contentRes.data : [];
+
+                setRooms(roomsData);
+                setClients(alternateClients(clientsData));
                 
                 const contentObj = {};
-                contentRes.data.forEach(item => {
-                    contentObj[item.section] = item.data;
+                contentData.forEach(item => {
+                    if (item && item.section) {
+                        contentObj[item.section] = item.data;
+                    }
                 });
                 setContent(contentObj);
             } catch (error) {

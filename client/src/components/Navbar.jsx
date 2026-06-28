@@ -16,11 +16,17 @@ const Navbar = () => {
 
         // Fetch phone number
         fetch(`${API_BASE_URL}/content/contact`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.data?.phone) setPhone(data.data.phone);
+            .then(res => {
+                const contentType = res.headers.get("content-type");
+                if (res.ok && contentType && contentType.includes("application/json")) {
+                    return res.json();
+                }
+                throw new Error(`Non-JSON response or request failed (status: ${res.status}, content-type: ${contentType})`);
             })
-            .catch(err => console.error("Error fetching contact phone", err));
+            .then(data => {
+                if (data && data.data?.phone) setPhone(data.data.phone);
+            })
+            .catch(err => console.error("Error fetching contact phone:", err.message || err));
 
         return () => window.removeEventListener('scroll', handleScroll);
     }, []);
