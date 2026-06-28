@@ -15,6 +15,14 @@
       "destination": "/server/server.js"
     },
     {
+      "source": "/admin",
+      "destination": "/client/dist/index.html"
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/client/dist/index.html"
+    },
+    {
       "source": "/:path*\\.:ext",
       "destination": "/client/dist/:path*\\.:ext"
     },
