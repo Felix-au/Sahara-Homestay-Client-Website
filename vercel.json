@@ -5,6 +5,18 @@
       "runtime": "vercel-node@latest"
     }
   },
+  "redirects": [
+    {
+      "source": "/admin",
+      "destination": "/#/admin",
+      "permanent": false
+    },
+    {
+      "source": "/admin/dashboard",
+      "destination": "/#/admin/dashboard",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -13,14 +25,6 @@
     {
       "source": "/uploads/(.*)",
       "destination": "/server/server.js"
-    },
-    {
-      "source": "/admin",
-      "destination": "/client/dist/index.html"
-    },
-    {
-      "source": "/admin/dashboard",
-      "destination": "/client/dist/index.html"
     },
     {
       "source": "/:path*\\.:ext",
